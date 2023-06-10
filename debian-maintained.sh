@@ -1,5 +1,37 @@
 #!/bin/bash
 
+# 安装Docker和Docker Compose
+install_docker_and_compose() {
+  # 更新系统软件包
+  sudo apt update
+
+  # 安装所需的软件包以允许apt通过HTTPS使用存储库
+  sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+
+  # 添加Docker的官方GPG密钥
+  curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+  # 添加Docker的APT存储库
+  echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+  # 更新软件包索引
+  sudo apt update
+
+  # 安装Docker引擎
+  sudo apt install docker-ce docker-ce-cli containerd.io -y
+
+  # 将当前用户添加到docker组，以免使用sudo运行Docker命令
+  sudo usermod -aG docker $USER
+
+  # 安装Docker Compose
+  sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  sudo chmod +x /usr/local/bin/docker-compose
+
+  # 输出Docker和Docker Compose版本
+  docker --version
+  docker-compose --version
+}
+
 # 函数：删除容器和相关映射目录
 delete_container() {
   echo "请输入要删除的容器ID:"
@@ -48,18 +80,17 @@ clear_container_logs() {
 # 函数：系统更新清理
 system_cleanup() {
   echo "正在更新系统..."
-  apt update && apt upgrade -y
-
+  sudo apt update && sudo apt upgrade -y
   echo "正在清理垃圾..."
-  apt autoclean
-  apt autoremove -y
+  sudo apt autoclean
+  sudo apt autoremove -y
 
   echo "正在清理日志文件..."
-  find /var/log -type f -delete
+  sudo find /var/log -type f -delete
 
   backup_directory="/path/to/backup"  # 设置备份目录的路径
   echo "正在清理备份文件/目录 $backup_directory..."
-  rm -rf "$backup_directory"
+  sudo rm -rf "$backup_directory"
 
   echo "系统更新、垃圾清理、日志清理和备份清理完成！"
 }
@@ -147,20 +178,24 @@ panel_installation_menu() {
 # 主菜单
 while true; do
   echo "请选择要执行的操作:"
-  echo "1. 日常维护"
-  echo "2. 面板安装"
-  echo "3. 退出"
+  echo "1. 安装Docker和Docker Compose"
+  echo "2. 日常维护"
+  echo "3. 面板安装"
+  echo "4. 退出"
 
   read choice
 
   case $choice in
     1)
-      maintenance_menu
+      install_docker_and_compose
       ;;
     2)
-      panel_installation_menu
+      maintenance_menu
       ;;
     3)
+      panel_installation_menu
+      ;;
+    4)
       echo "退出脚本。"
       break
       ;;
@@ -171,4 +206,5 @@ while true; do
 
   echo
 done
+
 
