@@ -72,6 +72,14 @@ install_aapanel() {
   echo "aapanel安装完成！"
 }
 
+# 函数：安装casaos
+install_casaos() {
+  echo "正在安装casaos..."
+  curl -fsSL https://get.casaos.io | sudo bash
+
+  echo "casaos安装完成！"
+}
+
 # 日常维护子功能菜单
 maintenance_menu() {
   while true; do
@@ -111,7 +119,8 @@ panel_installation_menu() {
   while true; do
     echo "请选择要执行的面板安装操作:"
     echo "1. 安装aapanel"
-    echo "2. 返回主菜单"
+    echo "2. 安装casaos"
+    echo "3. 返回主菜单"
 
     read choice
 
@@ -120,6 +129,9 @@ panel_installation_menu() {
         install_aapanel
         ;;
       2)
+        install_casaos
+        ;;
+      3)
         echo "返回主菜单。"
         break
         ;;
@@ -159,3 +171,4 @@ while true; do
 
   echo
 done
+
