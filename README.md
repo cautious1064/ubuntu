@@ -9,4 +9,4 @@ Docker-compose 克隆
 ```
 wget -O /root/docker-compose.yml https://raw.githubusercontent.com/cautious1064/debian/main/docker-compose.yml
 ```
-Debian 密钥登入 关闭密码登入
+Debian 密钥登入
