@@ -53,7 +53,6 @@ services:
     network_mode: host
     volumes:
       - "/opt/npm:/data"
-      # - "/var/www:/var/www" # 可选项，如果您想将其用作HTML/PHP的Web服务器
-      # - "/opt/npm-letsencrypt:/etc/letsencrypt" # 仅在第一次从原始nginx-proxy-manager迁移到此分支时需要
+      - "/var/www:/var/www"
     environment:
-      - "TZ=Asia/Shanghai" # 设置时区为中国上海
+      - "TZ=Asia/Shanghai"
