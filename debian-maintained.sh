@@ -1,7 +1,8 @@
+#!/bin/bash
+
 # 删除容器和相关映射目录
 delete_container() {
-  echo "请输入要删除的容器ID:"
-  read -r container_id
+  read -p "请输入要删除的容器ID: " container_id
 
   echo "系统更新完成！"
 
@@ -22,6 +23,38 @@ delete_container() {
   echo "系统更新、垃圾清理、日志清理和备份清理完成！"
 }
 
+# 安装Docker和Docker Compose
+install_docker_and_compose() {
+  # 更新系统软件包
+  sudo apt update
+
+  # 安装所需的软件包以允许apt通过HTTPS使用存储库
+  sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
+
+  # 添加Docker的官方GPG密钥
+  curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+
+  # 添加Docker的APT存储库
+  echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+
+  # 更新软件包索引
+  sudo apt update
+
+  # 安装Docker引擎
+  sudo apt install -y docker-ce docker-ce-cli containerd.io
+
+  # 将当前用户添加到docker组，以免使用sudo运行Docker命令
+  sudo usermod -aG docker "$USER"
+
+  # 安装Docker Compose
+  sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+  sudo chmod +x /usr/local/bin/docker-compose
+
+  # 输出Docker和Docker Compose版本
+  docker --version
+  docker-compose --version
+}
+
 # 安装aapanel
 install_aapanel() {
   echo "正在下载并执行aapanel安装脚本..."
@@ -39,9 +72,7 @@ install_casaos() {
 # 开启BBR FQ
 enable_bbr_fq() {
   # 检查当前系统是否已经开启BBR FQ
-  sysctl net.ipv4.tcp_congestion_control | grep -q "bbr"
-
-  if [ $? -eq 0 ]; then
+  if sysctl net.ipv4.tcp_congestion_control | grep -q "bbr"; then
     echo "BBR FQ已经开启，无需执行操作。"
   else
     echo "正在开启BBR FQ..."
@@ -49,14 +80,19 @@ enable_bbr_fq() {
     echo "net.ipv4.tcp_congestion_control=bbr" | sudo tee -a /etc/sysctl.conf
     sudo sysctl -p
 
-    sysctl net.ipv4.tcp_congestion_control | grep -q "bbr"
-
-    if [ $? -eq 0 ]; then
+    if sysctl net.ipv4.tcp_congestion_control | grep -q "bbr"; then
       echo "BBR FQ已成功开启！"
     else
       echo "无法开启BBR FQ，请检查系统配置。"
     fi
   fi
+}
+
+# 清空所有容器日志
+clear_container_logs() {
+  echo "正在清空所有容器日志..."
+  sudo find /var/lib/docker/containers/ -type f -name '*.log' -delete
+  echo "容器日志清理完成！"
 }
 
 # 日常维护子功能菜单
@@ -111,7 +147,7 @@ while true; do
       maintenance_menu
       ;;
     2)
-      panel_installation_menu
+      install_aapanel
       ;;
     3)
       echo "退出脚本。"
@@ -124,35 +160,3 @@ while true; do
 
   echo
 done
-
-# 安装Docker和Docker Compose
-install_docker_and_compose() {
-  # 更新系统软件包
-  sudo apt update
-
-  # 安装所需的软件包以允许apt通过HTTPS使用存储库
-  sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
-
-  # 添加Docker的官方GPG密钥
-  curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-
-  # 添加Docker的APT存储库
-  echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-  # 更新软件包索引
-  sudo apt update
-
-  # 安装Docker引擎
-  sudo apt install -y docker-ce docker-ce-cli containerd.io
-
-  # 将当前用户添加到docker组，以免使用sudo运行Docker命令
-  sudo usermod -aG docker $USER
-
-  # 安装Docker Compose
-  sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  sudo chmod +x /usr/local/bin/docker-compose
-
-  # 输出Docker和Docker Compose版本
-  docker --version
-  docker-compose --version
-}
