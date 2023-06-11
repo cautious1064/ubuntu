@@ -6,7 +6,7 @@ install_docker_and_compose() {
   sudo apt update
 
   # 安装所需的软件包以允许apt通过HTTPS使用存储库
-  sudo apt install apt-transport-https ca-certificates curl software-properties-common -y
+  sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
 
   # 添加Docker的官方GPG密钥
   curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
@@ -18,7 +18,7 @@ install_docker_and_compose() {
   sudo apt update
 
   # 安装Docker引擎
-  sudo apt install docker-ce docker-ce-cli containerd.io -y
+  sudo apt install -y docker-ce docker-ce-cli containerd.io
 
   # 将当前用户添加到docker组，以免使用sudo运行Docker命令
   sudo usermod -aG docker $USER
@@ -32,10 +32,10 @@ install_docker_and_compose() {
   docker-compose --version
 }
 
-# 函数：删除容器和相关映射目录
+# 删除容器和相关映射目录
 delete_container() {
   echo "请输入要删除的容器ID:"
-  read container_id
+  read -r container_id
 
   if docker ps -a --format "{{.ID}}" | grep -q "$container_id"; then
     mount_dirs=()
@@ -59,7 +59,7 @@ delete_container() {
   fi
 }
 
-# 函数：清空所有容器日志
+# 清空所有容器日志
 clear_container_logs() {
   container_ids=$(docker ps -aq)
 
@@ -77,37 +77,41 @@ clear_container_logs() {
   done
 }
 
-# 函数：系统更新清理
+# 系统更新清理
 system_cleanup() {
   echo "正在更新系统..."
-  sudo apt update && sudo apt upgrade -y
+  sudo apt update
+  sudo apt upgrade -y
+  echo "系统更新完成！"
+
   echo "正在清理垃圾..."
   sudo apt autoclean
   sudo apt autoremove -y
+  echo "垃圾清理完成！"
 
   echo "正在清理日志文件..."
   sudo find /var/log -type f -delete
+  echo "日志文件清理完成！"
 
   backup_directory="/path/to/backup"  # 设置备份目录的路径
   echo "正在清理备份文件/目录 $backup_directory..."
   sudo rm -rf "$backup_directory"
+  echo "备份文件/目录清理完成！"
 
   echo "系统更新、垃圾清理、日志清理和备份清理完成！"
 }
 
-# 函数：安装aapanel
+# 安装aapanel
 install_aapanel() {
   echo "正在下载并执行aapanel安装脚本..."
   wget -O install.sh http://www.aapanel.com/script/install-ubuntu_6.0_en.sh && bash install.sh aapanel
-
   echo "aapanel安装完成！"
 }
 
-# 函数：安装casaos
+# 安装casaos
 install_casaos() {
   echo "正在安装casaos..."
   curl -fsSL https://get.casaos.io | sudo bash
-
   echo "casaos安装完成！"
 }
 
@@ -120,7 +124,7 @@ maintenance_menu() {
     echo "3. 系统更新清理"
     echo "4. 返回主菜单"
 
-    read choice
+    read -r choice
 
     case $choice in
       1)
@@ -153,7 +157,7 @@ panel_installation_menu() {
     echo "2. 安装casaos"
     echo "3. 返回主菜单"
 
-    read choice
+    read -r choice
 
     case $choice in
       1)
@@ -183,7 +187,7 @@ while true; do
   echo "3. 面板安装"
   echo "4. 退出"
 
-  read choice
+  read -r choice
 
   case $choice in
     1)
@@ -206,5 +210,3 @@ while true; do
 
   echo
 done
-
-
