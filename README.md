@@ -7,5 +7,5 @@ wget --no-check-certificate -O debian-maintained.sh https://raw.githubuserconten
 
 Docker-compose 克隆
 ```
-wget https://raw.githubusercontent.com/cautious1064/debian/main/docker-compose.yml
+wget -P /root/ https://raw.githubusercontent.com/cautious1064/debian/main/docker-compose.yml
 ```
