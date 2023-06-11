@@ -20,4 +20,18 @@ services:
     ports:
       - 5700:5700
     volumes:
-      - /root/ql/data:/ql/data     
+      - /root/ql/data:/ql/data
+  zerotier-one:
+    image: henrist/zerotier-one
+    container_name: zerotier-one
+    restart: unless-stopped
+    privileged: true
+    network_mode: host
+    devices:
+      - /dev/net/tun
+    cap_add:
+      - NET_ADMIN
+      - SYS_ADMIN
+    volumes:
+      - /var/lib/zerotier-one:/var/lib/zerotier-one
+    mem_limit: 100m
