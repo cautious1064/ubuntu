@@ -36,52 +36,7 @@ install_docker_and_compose() {
 delete_container() {
   echo "请输入要删除的容器ID:"
   read -r container_id
-
-  if docker ps -a --format "{{.ID}}" | grep -q "$container_id"; then
-    mount_dirs=()
-    while IFS= read -r mount_dir; do
-      if [ -d "$mount_dir" ]; then
-        mount_dirs+=("$mount_dir")
-      fi
-    done < <(docker container inspect "$container_id" --format='{{range .Mounts}}{{.Source}}{{"\n"}}{{end}}')
-
-    docker stop "$container_id"
-    docker rm "$container_id"
-
-    for mount_dir in "${mount_dirs[@]}"; do
-      echo "删除目录: $mount_dir"
-      rm -rf "$mount_dir"
-    done
-
-    echo "容器和相关映射目录已成功删除。"
-  else
-    echo "容器ID不存在。请提供有效的容器ID。"
-  fi
-}
-
-# 清空所有容器日志
-clear_container_logs() {
-  container_ids=$(docker ps -aq)
-
-  for container_id in $container_ids; do
-    log_path=$(docker inspect --format='{{.LogPath}}' "$container_id")
-
-    if [ -z "$log_path" ]; then
-      echo "无法获取容器 $container_id 的日志路径！跳过该容器。"
-      continue
-    fi
-
-    truncate -s 0 "$log_path"
-
-    echo "容器 $container_id 的日志已成功清除！"
-  done
-}
-
-# 系统更新清理
-system_cleanup() {
-  echo "正在更新系统..."
-  sudo apt update
-  sudo apt upgrade -y
+  
   echo "系统更新完成！"
 
   echo "正在清理垃圾..."
@@ -115,6 +70,29 @@ install_casaos() {
   echo "casaos安装完成！"
 }
 
+# 开启BBR FQ
+enable_bbr_fq() {
+  # 检查当前系统是否已经开启BBR FQ
+  sysctl net.ipv4.tcp_congestion_control | grep -q "bbr"
+
+  if [ $? -eq 0 ]; then
+    echo "BBR FQ已经开启，无需执行操作。"
+  else
+    echo "正在开启BBR FQ..."
+    echo "net.core.default_qdisc=fq" | sudo tee -a /etc/sysctl.conf
+    echo "net.ipv4.tcp_congestion_control=bbr" | sudo tee -a /etc/sysctl.conf
+    sudo sysctl -p
+
+    sysctl net.ipv4.tcp_congestion_control | grep -q "bbr"
+
+    if [ $? -eq 0 ]; then
+      echo "BBR FQ已成功开启！"
+    else
+      echo "无法开启BBR FQ，请检查系统配置。"
+    fi
+  fi
+}
+
 # 日常维护子功能菜单
 maintenance_menu() {
   while true; do
@@ -122,7 +100,8 @@ maintenance_menu() {
     echo "1. 删除容器和相关映射目录"
     echo "2. 清空所有容器日志"
     echo "3. 系统更新清理"
-    echo "4. 返回主菜单"
+    echo "4. 开启BBR FQ"
+    echo "5. 返回主菜单"
 
     read -r choice
 
@@ -137,6 +116,9 @@ maintenance_menu() {
         system_cleanup
         ;;
       4)
+        enable_bbr_fq
+        ;;
+      5)
         echo "返回主菜单。"
         break
         ;;
