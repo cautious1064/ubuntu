@@ -35,14 +35,6 @@ services:
     volumes:
       - /var/lib/zerotier-one:/var/lib/zerotier-one
     mem_limit: 100m
-  x-ui:
-    image: enwaiax/x-ui:latest
-    restart: unless-stopped
-    networks:
-      - host
-    volumes:
-      - ./db:/etc/x-ui/
-      - ./cert:/root/cert/
   nginx-proxy-manager:
     container_name: nginx-proxy-manager
     image: zoeyvid/nginx-proxy-manager
