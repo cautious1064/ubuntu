@@ -10,3 +10,6 @@ Docker-compose 克隆
 wget -O /root/docker-compose.yml https://raw.githubusercontent.com/cautious1064/debian/main/docker-compose.yml
 ```
 Debian 密钥登入
+```
+wget --no-check-certificate -O sshkey.sh https://raw.githubusercontent.com/cautious1064/debian/main/sshkey.sh && chmod a+x sshkey.sh && bash sshkey.sh
+```
