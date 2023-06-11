@@ -43,9 +43,6 @@ services:
     volumes:
       - ./db:/etc/x-ui/
       - ./cert:/root/cert/
-version: "3.8"
-
-services:
   nginx-proxy-manager:
     container_name: nginx-proxy-manager
     image: zoeyvid/nginx-proxy-manager
