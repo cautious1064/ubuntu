@@ -1,10 +1,28 @@
 #!/bin/bash
 
+# 清理未使用的镜像
+clean_docker_images() {
+  docker image prune -a --force
+}
+
+# 清理未使用的卷
+clean_docker_volumes() {
+  docker volume prune --force
+}
+
+# 清理未使用的网络
+clean_docker_networks() {
+  docker network prune --force
+}
+
+# 清理停止的容器
+clean_docker_containers() {
+  docker container prune --force
+}
+
 # 删除容器和相关映射目录
 delete_container() {
   read -p "请输入要删除的容器ID: " container_id
-
-  echo "系统更新完成！"
 
   echo "正在清理垃圾..."
   sudo apt autoclean
@@ -101,9 +119,10 @@ maintenance_menu() {
     echo "请选择要执行的日常维护操作:"
     echo "1. 删除容器和相关映射目录"
     echo "2. 清空所有容器日志"
-    echo "3. 安装Docker和Docker Compose"
-    echo "4. 开启BBR FQ"
-    echo "5. 返回主菜单"
+    echo "3. 清理Docker"
+    echo "4. 安装Docker和Docker Compose"
+    echo "5. 开启BBR FQ"
+    echo "6. 返回主菜单"
 
     read -r choice
 
@@ -115,13 +134,54 @@ maintenance_menu() {
         clear_container_logs
         ;;
       3)
-        install_docker_and_compose
+        docker_cleanup_menu
         ;;
       4)
-        enable_bbr_fq
+        install_docker_and_compose
         ;;
       5)
+        enable_bbr_fq
+        ;;
+      6)
         echo "返回主菜单。"
+        break
+        ;;
+      *)
+        echo "无效的选项，请重新选择。"
+        ;;
+    esac
+
+    echo
+  done
+}
+
+# Docker清理子功能菜单
+docker_cleanup_menu() {
+  while true; do
+    echo "请选择要执行的Docker清理操作:"
+    echo "1. 清理未使用的镜像"
+    echo "2. 清理未使用的卷"
+    echo "3. 清理未使用的网络"
+    echo "4. 清理停止的容器"
+    echo "5. 返回"
+
+    read -r docker_choice
+
+    case $docker_choice in
+      1)
+        clean_docker_images
+        ;;
+      2)
+        clean_docker_volumes
+        ;;
+      3)
+        clean_docker_networks
+        ;;
+      4)
+        clean_docker_containers
+        ;;
+      5)
+        echo "返回日常维护菜单。"
         break
         ;;
       *)
