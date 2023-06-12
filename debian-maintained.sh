@@ -170,17 +170,14 @@ update_and_cleanup_system() {
   echo "系统更新、垃圾清理、日志清理和备份清理完成！"
 }
 
-# 主菜单
-main_menu() {
-  clear
-  echo "===================================="
-  echo "       系统维护工具脚本"
-  echo "===================================="
+# 显示菜单选项
+show_menu() {
+  echo "************ 脚本功能菜单 ************"
   echo "1. 清理未使用的Docker镜像"
   echo "2. 清理未使用的Docker卷"
   echo "3. 清理未使用的Docker网络"
   echo "4. 清理停止的Docker容器"
-  echo "5. 删除指定的Docker容器及相关映射目录"
+  echo "5. 删除指定的Docker容器和相关映射目录"
   echo "6. 安装Docker和Docker Compose"
   echo "7. 安装aapanel"
   echo "8. 安装casaos"
@@ -188,30 +185,57 @@ main_menu() {
   echo "10. 清空所有容器日志"
   echo "11. 更新和清理系统"
   echo "0. 退出"
-  echo "===================================="
-  read -p "请输入选项： " choice
-  echo "------------------------------------"
+  echo "************************************"
+  read -p "请输入选项数字: " option
+  echo
 
-  case $choice in
-    1) clean_docker_images ;;
-    2) clean_docker_volumes ;;
-    3) clean_docker_networks ;;
-    4) clean_docker_containers ;;
-    5) delete_container ;;
-    6) install_docker_and_compose ;;
-    7) install_aapanel ;;
-    8) install_casaos ;;
-    9) enable_bbr_fq ;;
-    10) clear_container_logs ;;
-    11) update_and_cleanup_system ;;
-    0) exit ;;
-    *) echo "无效的选项，请重新输入。" ;;
+  case $option in
+    1)
+      clean_docker_images
+      ;;
+    2)
+      clean_docker_volumes
+      ;;
+    3)
+      clean_docker_networks
+      ;;
+    4)
+      clean_docker_containers
+      ;;
+    5)
+      delete_container
+      ;;
+    6)
+      install_docker_and_compose
+      ;;
+    7)
+      install_aapanel
+      ;;
+    8)
+      install_casaos
+      ;;
+    9)
+      enable_bbr_fq
+      ;;
+    10)
+      clear_container_logs
+      ;;
+    11)
+      update_and_cleanup_system
+      ;;
+    0)
+      echo "脚本已退出。"
+      exit
+      ;;
+    *)
+      echo "无效的选项，请重新输入。"
+      show_menu
+      ;;
   esac
 
-  echo "------------------------------------"
-  read -p "按任意键返回主菜单..." -n 1 -r
-  main_menu
+  echo
+  show_menu
 }
 
-# 启动主菜单
-main_menu
+# 运行菜单
+show_menu
