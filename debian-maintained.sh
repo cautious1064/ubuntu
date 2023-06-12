@@ -44,7 +44,6 @@ delete_container() {
     echo "容器没有映射目录。"
     return
   fi
-  done
 
   echo "正在停止并删除容器 $container_id..."
   sudo docker stop "$container_id"
