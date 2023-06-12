@@ -24,17 +24,30 @@ clean_docker_containers() {
 delete_container() {
   read -p "请输入要删除的容器ID: " container_id
 
-  echo "正在清理垃圾..."
+  echo "正在停止并删除容器 $container_id..."
+  docker stop $container_id
+  docker rm $container_id
+  echo "容器 $container_id 删除完成！"
+
+  echo "正在清理容器相关的映射目录..."
+  data_directory="/path/to/data"  
+  logs_directory="/path/to/logs" 
+  
+  sudo rm -rf "$data_directory"
+  sudo rm -rf "$logs_directory"
+  echo "容器相关的映射目录清理完成！"
+
+  echo "垃圾清理..."
   sudo apt autoclean
   sudo apt autoremove -y
   echo "垃圾清理完成！"
 
-  echo "正在清理日志文件..."
+  echo "日志文件清理..."
   sudo find /var/log -type f -delete
   echo "日志文件清理完成！"
 
-  backup_directory="/path/to/backup"  # 设置备份目录的路径
-  echo "正在清理备份文件/目录 $backup_directory..."
+  backup_directory="/path/to/backup"  
+  echo "备份文件/目录清理..."
   sudo rm -rf "$backup_directory"
   echo "备份文件/目录清理完成！"
 
