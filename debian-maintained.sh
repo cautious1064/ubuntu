@@ -29,11 +29,6 @@ delete_container() {
     return
   fi
 
-  echo "正在停止并删除容器 $container_id..."
-  docker stop "$container_id"
-  docker rm "$container_id"
-  echo "容器 $container_id 删除完成！"
-
   declare -a directories=("/path/to/data" "/path/to/logs")
   for directory in "${directories[@]}"; do
     echo "正在清理容器相关的映射目录 $directory..."
@@ -45,6 +40,13 @@ delete_container() {
     fi
   done
 
+  echo "正在停止并删除容器 $container_id..."
+  docker stop "$container_id"
+  docker rm "$container_id"
+  echo "容器 $container_id 删除完成！"
+
+  # 其他清理操作...
+
   echo "垃圾清理..."
   sudo apt autoclean
   sudo apt autoremove -y
@@ -54,14 +56,7 @@ delete_container() {
   sudo find /var/log -type f -delete
   echo "日志文件清理完成！"
 
-  backup_directory="/path/to/backup"
-  echo "备份文件/目录清理..."
-  if [[ -d "$backup_directory" ]]; then
-    sudo rm -rf "$backup_directory"
-    echo "备份文件/目录清理完成！"
-  else
-    echo "备份目录 $backup_directory 不存在。"
-  fi
+  # 其他清理操作...
 
   echo "系统更新、垃圾清理、日志清理和备份清理完成！"
 }
