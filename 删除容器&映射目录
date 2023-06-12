@@ -1,0 +1,28 @@
+#!/bin/bash
+
+# 停止并删除容器
+container_name="your_container_name"
+echo "停止容器 ${container_name}..."
+docker stop ${container_name}
+echo "删除容器 ${container_name}..."
+docker rm ${container_name}
+
+# 删除相关的映射目录
+echo "删除容器 ${container_name} 的相关映射目录..."
+base_dir="/your/base/directory"  # 基本目录，根据实际情况修改
+container_dir="/container/mounted/directory"  # 容器中挂载的目录，根据实际情况修改
+
+# 确保目录存在
+if [ -d "${base_dir}/${container_dir}" ]; then
+  echo "删除目录 ${base_dir}/${container_dir}..."
+  rm -rf "${base_dir}/${container_dir}"
+else
+  echo "目录 ${base_dir}/${container_dir} 不存在."
+fi
+
+# 处理错误情况
+if [ $? -eq 0 ]; then
+  echo "容器已成功删除，相关映射目录已成功删除."
+else
+  echo "删除容器或相关映射目录时出现错误."
+fi
