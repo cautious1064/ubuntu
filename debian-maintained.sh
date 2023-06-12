@@ -104,6 +104,7 @@ install_docker_and_compose() {
   compose_version=$(curl -sSLI -o /dev/null -w %{url_effective} https://github.com/docker/compose/releases/latest | awk -F / '{print $NF}')
   sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   sudo chmod +x /usr/local/bin/docker-compose
+  sudo apt install jq
 
   if [[ -x "$(command -v docker)" && -x "$(command -v docker-compose)" ]]; then
     echo "Docker和Docker Compose安装完成！"
