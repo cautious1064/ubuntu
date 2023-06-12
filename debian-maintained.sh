@@ -143,110 +143,75 @@ clear_container_logs() {
   echo "容器日志清理完成！"
 }
 
-# 日常维护子功能菜单
-maintenance_menu() {
-  while true; do
-    echo "请选择要执行的日常维护操作:"
-    echo "1. 删除容器和相关映射目录"
-    echo "2. 清空所有容器日志"
-    echo "3. 清理Docker"
-    echo "4. 安装Docker和Docker Compose"
-    echo "5. 开启BBR FQ"
-    echo "6. 返回主菜单"
+# 更新和清理系统
+update_and_cleanup_system() {
+  echo "正在更新软件包..."
+  sudo apt update
+  echo "软件包更新完成！"
 
-    read -r choice
+  echo "垃圾清理..."
+  sudo apt autoclean
+  sudo apt autoremove -y
+  echo "垃圾清理完成！"
 
-    case $choice in
-      1)
-        delete_container
-        ;;
-      2)
-        clear_container_logs
-        ;;
-      3)
-        docker_cleanup_menu
-        ;;
-      4)
-        install_docker_and_compose
-        ;;
-      5)
-        enable_bbr_fq
-        ;;
-      6)
-        break
-        ;;
-      *)
-        echo "无效的选择，请重新输入。"
-        ;;
-    esac
-  done
-}
+  echo "日志文件清理..."
+  sudo find /var/log -type f -delete
+  echo "日志文件清理完成！"
 
-# Docker清理子功能菜单
-docker_cleanup_menu() {
-  while true; do
-    echo "请选择要执行的Docker清理操作:"
-    echo "1. 清理未使用的镜像"
-    echo "2. 清理未使用的卷"
-    echo "3. 清理未使用的网络"
-    echo "4. 清理停止的容器"
-    echo "5. 返回上级菜单"
+  backup_directory="/path/to/backup"
+  echo "备份文件/目录清理..."
+  if [[ -d "$backup_directory" ]]; then
+    sudo rm -rf "$backup_directory"
+    echo "备份文件/目录清理完成！"
+  else
+    echo "备份目录 $backup_directory 不存在。"
+  fi
 
-    read -r choice
-
-    case $choice in
-      1)
-        clean_docker_images
-        ;;
-      2)
-        clean_docker_volumes
-        ;;
-      3)
-        clean_docker_networks
-        ;;
-      4)
-        clean_docker_containers
-        ;;
-      5)
-        break
-        ;;
-      *)
-        echo "无效的选择，请重新输入。"
-        ;;
-    esac
-  done
+  echo "系统更新、垃圾清理、日志清理和备份清理完成！"
 }
 
 # 主菜单
 main_menu() {
-  while true; do
-    echo "请选择要执行的操作:"
-    echo "1. 日常维护"
-    echo "2. 安装aapanel"
-    echo "3. 安装casaos"
-    echo "4. 退出"
+  clear
+  echo "===================================="
+  echo "       系统维护工具脚本"
+  echo "===================================="
+  echo "1. 清理未使用的Docker镜像"
+  echo "2. 清理未使用的Docker卷"
+  echo "3. 清理未使用的Docker网络"
+  echo "4. 清理停止的Docker容器"
+  echo "5. 删除指定的Docker容器及相关映射目录"
+  echo "6. 安装Docker和Docker Compose"
+  echo "7. 安装aapanel"
+  echo "8. 安装casaos"
+  echo "9. 开启BBR FQ"
+  echo "10. 清空所有容器日志"
+  echo "11. 更新和清理系统"
+  echo "0. 退出"
+  echo "===================================="
+  read -p "请输入选项： " choice
+  echo "------------------------------------"
 
-    read -r choice
+  case $choice in
+    1) clean_docker_images ;;
+    2) clean_docker_volumes ;;
+    3) clean_docker_networks ;;
+    4) clean_docker_containers ;;
+    5) delete_container ;;
+    6) install_docker_and_compose ;;
+    7) install_aapanel ;;
+    8) install_casaos ;;
+    9) enable_bbr_fq ;;
+    10) clear_container_logs ;;
+    11) update_and_cleanup_system ;;
+    0) exit ;;
+    *) echo "无效的选项，请重新输入。" ;;
+  esac
 
-    case $choice in
-      1)
-        maintenance_menu
-        ;;
-      2)
-        install_aapanel
-        ;;
-      3)
-        install_casaos
-        ;;
-      4)
-        break
-        ;;
-      *)
-        echo "无效的选择，请重新输入。"
-        ;;
-    esac
-  done
+  echo "------------------------------------"
+  read -p "按任意键返回主菜单..." -n 1 -r
+  main_menu
 }
 
-# 运行主菜单
+# 启动主菜单
 main_menu
