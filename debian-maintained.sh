@@ -44,17 +44,6 @@ delete_container() {
     echo "容器没有映射目录。"
     return
   fi
-
-  # 删除容器的映射目录上一级目录
-  for directory in "${directories[@]}"; do
-    parent_directory=$(dirname "$directory")
-    echo "正在清理容器相关的映射目录上一级目录 $parent_directory..."
-    if [[ -d "$parent_directory" ]]; then
-      sudo rm -rf "$parent_directory"
-      echo "目录 $parent_directory 清理完成！"
-    else
-      echo "目录 $parent_directory 不存在。"
-    fi
   done
 
   echo "正在停止并删除容器 $container_id..."
