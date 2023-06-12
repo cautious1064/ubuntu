@@ -30,7 +30,7 @@ delete_container() {
   fi
 
   # 获取容器的映射目录
-  container_info=$(docker inspect --format='{{json .Mounts}}' "$container_id")
+  container_info=$(sudo docker inspect --format='{{json .Mounts}}' "$container_id")
   if [ -z "$container_info" ]; then
     echo "无法获取容器的映射目录信息。"
     return
@@ -58,8 +58,8 @@ delete_container() {
   done
 
   echo "正在停止并删除容器 $container_id..."
-  docker stop "$container_id"
-  docker rm "$container_id"
+  sudo docker stop "$container_id"
+  sudo docker rm "$container_id"
   echo "容器 $container_id 删除完成！"
 
   # 其他清理操作...
