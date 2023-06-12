@@ -29,7 +29,23 @@ delete_container() {
     return
   fi
 
-  declare -a directories=("/path/to/data" "/path/to/logs")
+  # 获取容器的映射目录
+  container_info=$(docker inspect --format='{{json .Mounts}}' "$container_id")
+  if [ -z "$container_info" ]; then
+    echo "无法获取容器的映射目录信息。"
+    return
+  fi
+
+  # 解析容器的映射目录路径
+  declare -a directories=()
+  mapfile -t directories < <(echo "$container_info" | jq -r '.[].Source')
+
+  if [ ${#directories[@]} -eq 0 ]; then
+    echo "容器没有映射目录。"
+    return
+  fi
+
+  # 删除容器的映射目录
   for directory in "${directories[@]}"; do
     echo "正在清理容器相关的映射目录 $directory..."
     if [[ -d "$directory" ]]; then
