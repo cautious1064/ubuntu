@@ -1,37 +1,5 @@
 #!/bin/bash
 
-# 清理未使用的镜像
-clean_docker_images() {
-  docker image prune -a --force
-}
-
-# 清理未使用的卷
-clean_docker_volumes() {
-  docker volume prune --force
-}
-
-# 清理未使用的网络
-clean_docker_networks() {
-  docker network prune --force
-}
-
-# 清理停止的容器
-clean_docker_containers() {
-  docker container prune --force
-}
-
-# 检查容器是否处于运行状态
-is_container_running() {
-  local container_id=$1
-  local container_status=$(docker inspect -f '{{.State.Status}}' "$container_id")
-
-  if [[ "$container_status" == "running" ]]; then
-    return 0
-  else
-    return 1
-  fi
-}
-
 # 删除容器和相关映射目录
 delete_container() {
   read -p "请输入要删除的容器ID: " container_id
@@ -54,7 +22,7 @@ delete_container() {
   fi
 
   # 解析容器的映射目录路径
-  declare -a directories=()
+  directories=()
   mapfile -t directories < <(echo "$container_info" | jq -r '.[].Source')
 
   if [ ${#directories[@]} -eq 0 ]; then
@@ -115,7 +83,7 @@ install_docker_and_compose() {
   compose_version=$(curl -sSLI -o /dev/null -w %{url_effective} https://github.com/docker/compose/releases/latest | awk -F / '{print $NF}')
   sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
   sudo chmod +x /usr/local/bin/docker-compose
-  sudo apt install jq
+  sudo apt install -y jq
 
   if [[ -x "$(command -v docker)" && -x "$(command -v docker-compose)" ]]; then
     echo "Docker和Docker Compose安装完成！"
@@ -126,18 +94,18 @@ install_docker_and_compose() {
   fi
 }
 
-# 安装aapanel
+# 安装aaPanel
 install_aapanel() {
-  echo "正在下载并执行aapanel安装脚本..."
+  echo "正在下载并执行aaPanel安装脚本..."
   wget -O install.sh http://www.aapanel.com/script/install-ubuntu_6.0_en.sh && bash install.sh aapanel
-  echo "aapanel安装完成！"
+  echo "aaPanel安装完成！"
 }
 
-# 安装casaos
+# 安装CasaOS
 install_casaos() {
-  echo "正在安装casaos..."
+  echo "正在安装CasaOS..."
   curl -fsSL https://get.casaos.io | sudo bash
-  echo "casaos安装完成！"
+  echo "CasaOS安装完成！"
 }
 
 # 开启BBR FQ
@@ -309,11 +277,11 @@ while true; do
       delete_container
       ;;
     *)
-      echo "无效的选项。请重新输入。"
+      echo "无效的菜单选项。"
       ;;
   esac
 
   echo
 done
 
-echo "感谢使用脚本！"
+echo "脚本已退出。"
