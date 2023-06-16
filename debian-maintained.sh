@@ -20,6 +20,18 @@ clean_docker_containers() {
   docker container prune --force
 }
 
+# 检查容器是否处于运行状态
+is_container_running() {
+  local container_id=$1
+  local container_status=$(docker inspect -f '{{.State.Status}}' "$container_id")
+
+  if [[ "$container_status" == "running" ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
 # 删除容器和相关映射目录
 delete_container() {
   read -p "请输入要删除的容器ID: " container_id
@@ -29,8 +41,13 @@ delete_container() {
     return
   fi
 
+  if is_container_running "$container_id"; then
+    echo "容器 $container_id 正在运行，无法删除。"
+    return
+  fi
+
   # 获取容器的映射目录
-  container_info=$(sudo docker inspect --format='{{json .Mounts}}' "$container_id")
+  container_info=$(docker inspect --format='{{json .Mounts}}' "$container_id")
   if [ -z "$container_info" ]; then
     echo "无法获取容器的映射目录信息。"
     return
@@ -46,11 +63,16 @@ delete_container() {
   fi
 
   echo "正在停止并删除容器 $container_id..."
-  sudo docker stop "$container_id"
-  sudo docker rm "$container_id"
+  docker stop "$container_id"
+  docker rm "$container_id"
   echo "容器 $container_id 删除完成！"
 
-  # 其他清理操作...
+  # 删除容器相关的映射目录
+  for directory in "${directories[@]}"; do
+    echo "删除映射目录 $directory..."
+    sudo rm -rf "$directory"
+    echo "映射目录 $directory 删除完成！"
+  done
 
   echo "垃圾清理..."
   sudo apt autoclean
@@ -171,6 +193,61 @@ update_and_cleanup_system() {
   echo "系统更新、垃圾清理、日志清理和备份清理完成！"
 }
 
+# 删除指定的Docker容器和相关映射目录
+delete_container() {
+  read -p "请输入要删除的容器ID: " container_id
+
+  if [ -z "$container_id" ]; then
+    echo "未提供容器ID。"
+    return
+  fi
+
+  # 获取容器的映射目录
+  container_info=$(sudo docker inspect --format='{{json .Mounts}}' "$container_id")
+  if [ -z "$container_info" ]; then
+    echo "无法获取容器的映射目录信息。"
+    return
+  fi
+
+  # 解析容器的映射目录路径
+  declare -a directories=()
+  mapfile -t directories < <(echo "$container_info" | jq -r '.[].Source')
+
+  if [ ${#directories[@]} -eq 0 ]; then
+    echo "容器没有映射目录。"
+    return
+  fi
+
+  echo "正在停止并删除容器 $container_id..."
+  sudo docker stop "$container_id"
+  sudo docker rm "$container_id"
+  echo "容器 $container_id 删除完成！"
+
+  # 删除容器的映射目录
+  for directory in "${directories[@]}"; do
+    if [ -d "$directory" ]; then
+      echo "正在删除映射目录 $directory..."
+      sudo rm -rf "$directory"
+      echo "映射目录 $directory 删除完成！"
+    fi
+  done
+
+  # 其他清理操作...
+
+  echo "垃圾清理..."
+  sudo apt autoclean
+  sudo apt autoremove -y
+  echo "垃圾清理完成！"
+
+  echo "日志文件清理..."
+  sudo find /var/log -type f -delete
+  echo "日志文件清理完成！"
+
+  # 其他清理操作...
+
+  echo "系统更新、垃圾清理、日志清理和备份清理完成！"
+}
+
 # 显示菜单选项
 show_menu() {
   echo "************ 脚本功能菜单 ************"
@@ -178,19 +255,26 @@ show_menu() {
   echo "2. 清理未使用的Docker卷"
   echo "3. 清理未使用的Docker网络"
   echo "4. 清理停止的Docker容器"
-  echo "5. 删除指定的Docker容器和相关映射目录"
-  echo "6. 安装Docker和Docker Compose"
-  echo "7. 安装aapanel"
-  echo "8. 安装casaos"
-  echo "9. 开启BBR FQ"
-  echo "10. 清空所有容器日志"
-  echo "11. 更新和清理系统"
+  echo "5. 安装Docker和Docker Compose"
+  echo "6. 安装aaPanel"
+  echo "7. 安装CasaOS"
+  echo "8. 开启BBR FQ"
+  echo "9. 清空所有容器日志"
+  echo "10. 更新和清理系统"
+  echo "11. 删除Docker容器和相关映射目录"
   echo "0. 退出"
-  echo "************************************"
-  read -p "请输入选项数字: " option
-  echo
+  echo "**************************************"
+}
+
+# 主菜单循环
+while true; do
+  show_menu
+  read -p "请输入菜单选项（0-11）: " option
 
   case $option in
+    0)
+      break
+      ;;
     1)
       clean_docker_images
       ;;
@@ -204,39 +288,32 @@ show_menu() {
       clean_docker_containers
       ;;
     5)
-      delete_container
-      ;;
-    6)
       install_docker_and_compose
       ;;
-    7)
+    6)
       install_aapanel
       ;;
-    8)
+    7)
       install_casaos
       ;;
-    9)
+    8)
       enable_bbr_fq
       ;;
-    10)
+    9)
       clear_container_logs
       ;;
-    11)
+    10)
       update_and_cleanup_system
       ;;
-    0)
-      echo "脚本已退出。"
-      exit
+    11)
+      delete_container
       ;;
     *)
-      echo "无效的选项，请重新输入。"
-      show_menu
+      echo "无效的选项。请重新输入。"
       ;;
   esac
 
   echo
-  show_menu
-}
+done
 
-# 运行菜单
-show_menu
+echo "感谢使用脚本！"
