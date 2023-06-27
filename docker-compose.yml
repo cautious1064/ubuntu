@@ -18,10 +18,12 @@ services:
     image: enwaiax/x-ui
     restart: unless-stopped
     network_mode: host
-  nginx:
+  app:
     image: 'jc21/nginx-proxy-manager:latest'
     restart: unless-stopped
     network_mode: host
     volumes:
       - ./data:/data
       - ./letsencrypt:/etc/letsencrypt
+   
+
