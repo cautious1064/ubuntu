@@ -1,4 +1,4 @@
-# debian
+# Debian
 
 Debian服务器维护脚本 部署
 ```
