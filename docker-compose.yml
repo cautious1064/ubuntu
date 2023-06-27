@@ -19,7 +19,7 @@ services:
     restart: unless-stopped
     network_mode: host
   nginx:
-    image: 'jc21/nginx-proxy-manager:latest'
+    image: jc21/nginx-proxy-manager:latest
     restart: unless-stopped
     network_mode: host
     volumes:
