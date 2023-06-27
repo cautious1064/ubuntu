@@ -18,7 +18,7 @@ services:
     image: enwaiax/x-ui
     restart: unless-stopped
     network_mode: host
-  app:
+  nginx:
     image: 'jc21/nginx-proxy-manager:latest'
     restart: unless-stopped
     network_mode: host
