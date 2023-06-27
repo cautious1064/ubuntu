@@ -12,17 +12,16 @@ services:
       - 40000:40000
     restart: always
     mem_limit: 100M
-  nginx-proxy-manager:
-    container_name: nginx-proxy-manager
-    image: zoeyvid/nginx-proxy-manager
-    restart: unless-stopped
-    network_mode: host
-    volumes:
-      - "/opt/npm:/data"
-      - "/var/www:/var/www"
     environment:
       - "TZ=Asia/Shanghai"
   x-ui:
     image: enwaiax/x-ui
     restart: unless-stopped
     network_mode: host
+  nginx:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '81:81'
+      - '443:443'
