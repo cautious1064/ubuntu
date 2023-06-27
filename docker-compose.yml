@@ -22,3 +22,10 @@ services:
       - "/var/www:/var/www"
     environment:
       - "TZ=Asia/Shanghai"
+  x-ui:
+    image: enwaiax/x-ui
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /root/db/:/etc/x-ui/
+      - /root/cert/:/root/cert/
