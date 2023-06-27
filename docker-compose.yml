@@ -12,29 +12,6 @@ services:
       - 40000:40000
     restart: always
     mem_limit: 100M
-  qinglong:
-    image: whyour/qinglong:latest
-    container_name: qinglong
-    hostname: qinglong
-    restart: unless-stopped
-    ports:
-      - 5700:5700
-    volumes:
-      - /root/ql/data:/ql/data
-  zerotier-one:
-    image: henrist/zerotier-one
-    container_name: zerotier-one
-    restart: unless-stopped
-    privileged: true
-    network_mode: host
-    devices:
-      - /dev/net/tun
-    cap_add:
-      - NET_ADMIN
-      - SYS_ADMIN
-    volumes:
-      - /var/lib/zerotier-one:/var/lib/zerotier-one
-    mem_limit: 100m
   nginx-proxy-manager:
     container_name: nginx-proxy-manager
     image: zoeyvid/nginx-proxy-manager
