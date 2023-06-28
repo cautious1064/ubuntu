@@ -5,7 +5,7 @@ Debian服务器维护脚本 部署
 wget --no-check-certificate -O debian-maintained.sh https://raw.githubusercontent.com/cautious1064/debian/main/debian-maintained.sh && chmod a+x debian-maintained.sh && bash debian-maintained.sh
 ```
 
-# 临时机器快速部署(内置 watchtower nginx x-ui warp-proxy)
+# 临时机器快速部署 (watchtower nginx x-ui warp-proxy)
 
 Docker-compose 克隆
 ```
