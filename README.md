@@ -6,7 +6,7 @@ wget --no-check-certificate -O debian-maintained.sh https://raw.githubuserconten
 ```
 
 # 临时机器快速部署
-
+内置 watchtower nginx x-ui warp-proxy
 Docker-compose 克隆
 ```
 wget -O /root/docker-compose.yml https://raw.githubusercontent.com/cautious1064/debian/main/docker-compose.yml
