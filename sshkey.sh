@@ -20,8 +20,11 @@ sudo service ssh restart
 
 echo "密钥登录已配置完成。您可以使用密钥登录到服务器。"
 
-# 添加功能保持客户端连接 6 小时
-echo "ClientAliveInterval 360" | sudo tee -a /etc/ssh/sshd_config
-echo "ClientAliveCountMax 36" | sudo tee -a /etc/ssh/sshd_config
+# 修改客户端连接保持活动状态的设置
+sudo sed -i 's/#ClientAliveInterval 0/ClientAliveInterval 30/' /etc/ssh/sshd_config
+sudo sed -i 's/#ClientAliveCountMax 3/ClientAliveCountMax 500/' /etc/ssh/sshd_config
+
+# 重启 SSH 服务
 sudo service ssh restart
-echo "已添加功能：客户端连接将保持活动状态 6 小时。"
+
+echo "已添加功能：客户端连接将保持活动状态，每 30 秒发送一次保持活动的请求，最多发送 500 次。"
