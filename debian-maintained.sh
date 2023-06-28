@@ -80,8 +80,10 @@ clear_container_logs() {
 
 # 更新和清理系统
 update_and_cleanup_system() {
-  echo "正在更新软件包..."
-  sudo apt update
+  echo "正在更新软件包和基础工具..."
+  apt update -y
+  apt upgrade -y
+  apt install curl sudo neofetch vim -y
   echo "软件包更新完成！"
 
   echo "垃圾清理..."
