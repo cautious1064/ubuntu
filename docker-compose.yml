@@ -6,14 +6,6 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
     command: --cleanup
-  warp-proxy:
-    image: yarmak/warp-proxy
-    ports:
-      - 40000:40000
-    restart: always
-    mem_limit: 100M
-    environment:
-      - "TZ=Asia/Shanghai"
   x-ui:
     image: enwaiax/x-ui
     restart: unless-stopped
