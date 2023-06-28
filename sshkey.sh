@@ -14,6 +14,12 @@ echo "IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
 
 # 允许root用户登录SSH
 sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# 添加保持连接活动的配置
+echo "ClientAliveInterval 60" | sudo tee -a /etc/ssh/sshd_config
+echo "ClientAliveCountMax 120" | sudo tee -a /etc/ssh/sshd_config
+
+# 重启SSH服务
 sudo service ssh restart
 
 echo "密钥登录已配置完成。您可以使用密钥登录到服务器。"
