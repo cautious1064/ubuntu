@@ -11,10 +11,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
-
-volumes:
-  portainer_data:  
-  
   filebrowser:
     image: filebrowser/filebrowser:latest
     container_name: filebrowser
@@ -24,3 +20,5 @@ volumes:
     restart: unless-stopped
     ports:
       - 8080:80
+volumes:
+  portainer_data:  
