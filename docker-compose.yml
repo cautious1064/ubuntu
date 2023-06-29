@@ -14,3 +14,14 @@ services:
 
 volumes:
   portainer_data:    
+  filebrowser:
+    image: filebrowser/filebrowser:s6
+    volumes:
+      - /:/srv
+      - /path/to/filebrowser.db:/database/filebrowser.db
+      - /path/to/settings.json:/config/settings.json
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+    ports:
+      - 8080:80
