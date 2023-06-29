@@ -1,7 +1,7 @@
 version: '3'
 services:
   portainer:
-    image: portainer/portainer-ce:latest
+    image: portainer/portainer-ce
     container_name: portainer
     restart: unless-stopped
     ports:
@@ -13,7 +13,7 @@ services:
       - portainer_data:/data
  
   filebrowser:
-    image: filebrowser/filebrowser:latest
+    image: filebrowser/filebrowser
     container_name: filebrowser
     volumes:
       - /:/srv
