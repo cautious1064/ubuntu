@@ -4,25 +4,9 @@
 install_docker_and_compose() {
   # 更新系统软件包
   sudo apt update
-
-  # 安装所需的软件包以允许apt通过HTTPS使用存储库
-  sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
-
-  # 添加Docker的官方GPG密钥
-  curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/debian/gpg | sudo apt-key add -
-
-  # 添加Docker的APT存储库
-  echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-
-  # 更新软件包索引
-  sudo apt update
-
   # 安装Docker引擎
-  sudo apt install -y docker-ce docker-ce-cli containerd.io
-
-  # 将当前用户添加到docker组，以免使用sudo运行Docker命令
-  sudo usermod -aG docker "$USER"
-
+  curl -fsSL https://get.docker.com -o get-docker.sh
+  sudo sh get-docker.sh
   # 安装Docker Compose
   compose_version=$(curl -sSLI -o /dev/null -w %{url_effective} https://github.com/docker/compose/releases/latest | awk -F / '{print $NF}')
   sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
