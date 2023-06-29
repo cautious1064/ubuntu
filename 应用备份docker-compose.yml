@@ -1,6 +1,7 @@
 version: "3"
 services:
 
+  # Alist Service
   alist:
     image: xhofe/alist
     container_name: alist
@@ -14,6 +15,7 @@ services:
     volumes:
       - /etc/alist:/opt/alist/data
  
+  # Watchtower Service
   watchtower:
     image: containrrr/watchtower
     volumes:
@@ -21,11 +23,13 @@ services:
     restart: unless-stopped
     command: --cleanup
 
+  # X-UI Service
   x-ui:
     image: enwaiax/x-ui
     restart: unless-stopped
     network_mode: host
 
+  # Nginx Service
   nginx:
     image: jc21/nginx-proxy-manager
     restart: unless-stopped
@@ -34,6 +38,7 @@ services:
       - /root/data:/data
       - /root/letsencrypt:/etc/letsencrypt
 
+  # Warp Proxy Service
   warp-proxy:
     image: yarmak/warp-proxy
     ports:
