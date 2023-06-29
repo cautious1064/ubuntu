@@ -12,15 +12,15 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       - portainer_data:/data
  
-filebrowser:
-  image: filebrowser/filebrowser:latest
-  container_name: filebrowser
-  volumes:
-    - /:/srv
-  user: '1000:1000'
-  restart: unless-stopped
-  ports:
-    - 8080:80
+  filebrowser:
+    image: filebrowser/filebrowser:latest
+    container_name: filebrowser
+    volumes:
+      - /:/srv
+    user: '1000:1000'
+    restart: unless-stopped
+    ports:
+      - 8080:80
 
 volumes:
-  portainer_data:  
+  portainer_data:
