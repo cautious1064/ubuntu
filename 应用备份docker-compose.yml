@@ -1,6 +1,5 @@
 version: "3"
 services:
-
   alist:
     image: xhofe/alist
     container_name: alist
@@ -45,13 +44,23 @@ services:
     ports:
       - 3002:3002
     environment:
-      OPENAI_API_KEY: xxxxxx
-      OPENAI_ACCESS_TOKEN: xxxxxx
-      OPENAI_API_BASE_URL: xxxx
-      OPENAI_API_MODEL: xxxx
-      API_REVERSE_PROXY: xxx
-      AUTH_SECRET_KEY: xxx
-      MAX_REQUEST_PER_HOUR: 0
-      TIMEOUT_MS: 60000
-      SOCKS_PROXY_HOST: xxxx
-      SOCKS_PROXY_PORT: xxxx
+      - OPENAI_API_KEY=xxxxxx
+      - OPENAI_ACCESS_TOKEN=xxxxxx
+      - OPENAI_API_BASE_URL=xxxx
+      - OPENAI_API_MODEL=xxxx
+      - API_REVERSE_PROXY=xxx
+      - AUTH_SECRET_KEY=xxx
+      - MAX_REQUEST_PER_HOUR=0
+      - TIMEOUT_MS=60000
+      - SOCKS_PROXY_HOST=xxxx
+      - SOCKS_PROXY_PORT=xxxx
+
+  qinglong:
+    image: whyour/qinglong
+    container_name: qinglong
+    hostname: qinglong
+    restart: unless-stopped
+    ports:
+      - 5700:5700
+    volumes:
+      - /root/ql/data:/ql/data
