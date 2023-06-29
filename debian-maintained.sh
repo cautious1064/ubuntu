@@ -162,81 +162,6 @@ delete_container() {
   echo "删除容器和相关映射目录完成！"
 }
 
-# Docker容器备份
-backup_container() {
-  read -p "请输入要备份的容器ID: " container_id
-  
-  if [ -z "$container_id" ]; then
-    echo "未提供容器ID。"
-    return
-  fi
-
-  # 获取容器信息
-  container_info=$(sudo docker inspect --format='{{json .}}' "$container_id")
-  if [ -z "$container_info" ]; then
-    echo "无法获取容器信息。"
-    return
-  fi
-
-  # 获取容器名称
-  container_name=$(echo "$container_info" | jq -r '.Name' | sed 's/\///g')
-  if [ -z "$container_name" ]; then
-    echo "无法获取容器名称。"
-    return
-  fi
-
-  # 指定备份目录
-  backup_directory="/path/to/backup"
-  if [ ! -d "$backup_directory" ]; then
-    echo "备份目录 $backup_directory 不存在。"
-    return
-  fi
-
-  # 备份容器
-  echo "正在备份容器 $container_id..."
-  backup_filename="${container_name}_$(date +%Y%m%d%H%M%S).tar.gz"
-  sudo docker export "$container_id" | gzip > "$backup_directory/$backup_filename"
-  echo "容器 $container_id 备份完成！备份文件路径: $backup_directory/$backup_filename"
-}
-
-# Docker容器恢复
-restore_container() {
-  read -p "请输入要恢复的容器备份文件路径: " backup_file
-  
-  if [ -z "$backup_file" ]; then
-    echo "未提供备份文件路径。"
-    return
-  fi
-
-  if [ ! -f "$backup_file" ]; then
-    echo "备份文件 $backup_file 不存在。"
-    return
-  fi
-
-  # 指定恢复目录
-  restore_directory="/path/to/restore"
-  if [ ! -d "$restore_directory" ]; then
-    echo "恢复目录 $restore_directory 不存在。"
-    return
-  fi
-
-  # 解压备份文件
-  echo "正在解压备份文件 $backup_file..."
-  sudo tar xf "$backup_file" -C "$restore_directory"
-  echo "备份文件 $backup_file 解压完成！"
-
-  # 恢复容器
-  echo "正在恢复容器..."
-  container_id=$(sudo docker create $(sudo find "$restore_directory" -name '*.json' -exec cat {} \;))
-  if [ -n "$container_id" ]; then
-    sudo docker cp "$restore_directory" "$container_id:/"
-    sudo docker start "$container_id"
-    echo "容器恢复完成！容器ID: $container_id"
-  else
-    echo "无法创建容器。"
-  fi
-}
-
 # 主菜单
 show_main_menu() {
   clear
@@ -248,8 +173,6 @@ show_main_menu() {
   echo "5. 清空所有容器日志"
   echo "6. 更新和清理系统"
   echo "7. 删除指定的Docker容器和相关映射目录"
-  echo "8. Docker容器备份"
-  echo "9. Docker容器恢复"
   echo "0. 退出"
   echo
   read -p "请输入选项数字: " option
@@ -263,8 +186,6 @@ show_main_menu() {
     5) clear_container_logs ;;
     6) update_and_cleanup_system ;;
     7) delete_container ;;
-    8) backup_container ;;
-    9) restore_container ;;
     0) exit ;;
     *) echo "无效的选项。请重新输入。" ;;
   esac
