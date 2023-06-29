@@ -13,7 +13,8 @@ services:
       - portainer_data:/data
 
 volumes:
-  portainer_data:    
+  portainer_data:  
+  
   filebrowser:
     image: filebrowser/filebrowser
     container_name: filebrowser
