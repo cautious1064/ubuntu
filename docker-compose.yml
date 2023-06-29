@@ -22,4 +22,3 @@ volumes:
       - /:/srv
       - /path/filebrowser.db:/database.db
       - /path/.filebrowser.json:/.filebrowser.json
-    user: '${UID}:${GID}'
