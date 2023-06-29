@@ -1,7 +1,7 @@
 version: "3"
 services:
   alist:
-    image: xhofe/alist:latest
+    image: xhofe/alist
     container_name: alist
     restart: always
     ports:
@@ -23,7 +23,7 @@ services:
     restart: unless-stopped
     network_mode: host
   nginx:
-    image: jc21/nginx-proxy-manager:latest
+    image: jc21/nginx-proxy-manager
     restart: unless-stopped
     network_mode: host
     volumes:
