@@ -163,7 +163,7 @@ delete_container() {
 }
 
 # Docker容器备份
-mkdir /path/to/backup
+mkdir -p /path/to/backup
 backup_container() {
   read -p "请输入要备份的容器ID: " container_id
 
@@ -201,7 +201,7 @@ backup_container() {
 }
 
 # Docker容器恢复
-mkdir /path/to/restore
+mkdir -p /path/to/restore
 restore_container() {
   read -p "请输入要恢复的容器备份文件路径: " backup_file
 
