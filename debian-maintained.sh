@@ -9,7 +9,7 @@ install_docker_and_compose() {
   sudo apt install -y apt-transport-https ca-certificates curl software-properties-common
 
   # 添加Docker的官方GPG密钥
-  curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+  curl -fsSL https://mirrors.ustc.edu.cn/docker-ce/linux/debian/gpg | sudo apt-key add -
 
   # 添加Docker的APT存储库
   echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
