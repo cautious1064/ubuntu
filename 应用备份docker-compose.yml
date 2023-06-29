@@ -1,5 +1,6 @@
 version: "3"
 services:
+
   alist:
     image: xhofe/alist
     container_name: alist
@@ -12,16 +13,19 @@ services:
       - UMASK=022
     volumes:
       - /etc/alist:/opt/alist/data
+ 
   watchtower:
     image: containrrr/watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
     command: --cleanup
+
   x-ui:
     image: enwaiax/x-ui
     restart: unless-stopped
     network_mode: host
+
   nginx:
     image: jc21/nginx-proxy-manager
     restart: unless-stopped
@@ -29,3 +33,9 @@ services:
     volumes:
       - /root/data:/data
       - /root/letsencrypt:/etc/letsencrypt
+
+  warp-proxy:
+    image: yarmak/warp-proxy
+    ports:
+      - 40000:40000
+    restart: always
