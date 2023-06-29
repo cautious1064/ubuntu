@@ -16,7 +16,7 @@ volumes:
   portainer_data:  
   
   filebrowser:
-    image: filebrowser/filebrowser
+    image: filebrowser/filebrowser:latest
     container_name: filebrowser
     user: $DOCKER_UID_GID
     volumes:
