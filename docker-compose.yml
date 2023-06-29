@@ -20,7 +20,6 @@ services:
     restart: unless-stopped
     ports:
       - 8080:80
-    user: '1000:1000'
-
+      
 volumes:
   portainer_data:
