@@ -64,3 +64,12 @@ services:
       - 5700:5700
     volumes:
       - /root/ql/data:/ql/data
+
+  aapanel:
+    image: aapanel/aapanel:lib
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - ~/website_data:/www/wwwroot
+      - ~/mysql_data:/www/server/data
+      - ~/vhost:/www/server/panel/vhost
