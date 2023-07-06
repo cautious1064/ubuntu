@@ -5,6 +5,10 @@ Debian服务器维护脚本 部署
 wget --no-check-certificate -O debian-maintained.sh https://raw.githubusercontent.com/cautious1064/debian/main/debian-maintained.sh && chmod a+x debian-maintained.sh && bash debian-maintained.sh
 ```
 
+Alamlinux服务器维护脚本 部署
+```
+wget --no-check-certificate -O almalinux-maintained.sh https://raw.githubusercontent.com/cautious1064/debian/main/almalinux-maintained.sh && chmod a+x almalinux-maintained.sh && bash almalinux-maintained.sh
+```
 # 快速部署 
 
 Docker-compose 克隆
