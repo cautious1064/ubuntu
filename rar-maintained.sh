@@ -4,15 +4,14 @@
 if [[ $(uname -s) == "Linux" ]]; then
   # 服务器版操作系统
   PACKAGE_MANAGER="apt-get"
-  INSTALL_COMMAND="sudo $PACKAGE_MANAGER install"
+  INSTALL_COMMAND="sudo $PACKAGE_MANAGER install -y"
 else
-  # 桌面版操作系统
-  PACKAGE_MANAGER="apt"
-  INSTALL_COMMAND="sudo $PACKAGE_MANAGER install"
+  echo "该脚本仅支持Linux操作系统"
+  exit 1
 fi
 
 # 安装 unrar 软件包
-$INSTALL_COMMAND unrar -y
+$INSTALL_COMMAND unrar
 
 function extract_rar {
   # 检查参数是否为空
