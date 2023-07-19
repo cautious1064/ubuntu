@@ -1,5 +1,9 @@
 #!/bin/bash
 
+# 安装 unrar 和 zenity 软件包
+sudo apt-get update
+sudo apt-get install unrar zenity -y
+
 function extract_rar {
   # 弹出对话框让用户选择RAR文件
   RAR_FILE=$(zenity --file-selection --title="选择RAR文件" --file-filter="RAR 文件 | *.rar" --file-filter="所有文件 | *")
