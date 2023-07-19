@@ -1,17 +1,7 @@
 #!/bin/bash
 
-# 检查操作系统类型
-if [[ $(uname -s) == "Linux" ]]; then
-  # 服务器版操作系统
-  PACKAGE_MANAGER="apt-get"
-  INSTALL_COMMAND="sudo $PACKAGE_MANAGER install -y"
-else
-  echo "该脚本仅支持Linux操作系统"
-  exit 1
-fi
-
 # 安装 unrar 软件包
-$INSTALL_COMMAND unrar
+sudo apt-get install -y unrar
 
 function extract_rar {
   # 检查参数是否为空
