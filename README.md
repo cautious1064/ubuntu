@@ -10,6 +10,11 @@ wget --no-check-certificate -O debian-maintained.sh https://raw.githubuserconten
 wget --no-check-certificate -O upgrade.sh https://raw.githubusercontent.com/cautious1064/debian/main/upgrade.sh && chmod a+x upgrade.sh && bash upgrade.sh
 ```
 
+RAR 归档脚本 
+```
+wget --no-check-certificate -O rar-maintained.sh https://raw.githubusercontent.com/cautious1064/debian/main/rar-maintained.sh && chmod a+x rar-maintained.sh && bash rar-maintained.sh
+```
+
 # 快速部署 
 
 Docker-compose 克隆
