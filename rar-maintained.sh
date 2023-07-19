@@ -40,6 +40,9 @@ function compress_rar {
     exit 1
   fi
 
+  # 获取文件夹所在目录
+  SOURCE_DIR=$(dirname "$SOURCE")
+
   # 弹出对话框让用户选择是否加密
   ENCRYPTED=$(zenity --list --title="选择是否加密" --text="是否加密压缩文件?" --radiolist --column="" --column="选项" FALSE "否" TRUE "是")
 
@@ -58,12 +61,12 @@ function compress_rar {
     exit 1
   fi
 
-  # 弹出对话框让用户选择压缩后的RAR文件路径和名称
-  RAR_FILE=$(zenity --file-selection --title="选择压缩后的RAR文件路径和名称" --save --confirm-overwrite --file-filter="RAR 文件 | *.rar")
+  # 弹出对话框让用户选择压缩后的RAR文件名称
+  RAR_FILE=$(zenity --entry --title="输入压缩后的RAR文件名称" --text="请输入压缩后的RAR文件名称" --entry-text "archive.rar")
 
-  # 检查用户是否选择了RAR文件路径和名称
+  # 检查用户是否输入了RAR文件名称
   if [[ -z $RAR_FILE ]]; then
-    zenity --error --text="未选择压缩后的RAR文件路径和名称"
+    zenity --error --text="未输入压缩后的RAR文件名称"
     exit 1
   fi
 
@@ -83,7 +86,10 @@ function compress_rar {
   fi
 
   # 添加压缩文件夹和RAR文件路径到RAR命令
-  RAR_COMMAND+=" \"$RAR_FILE\" \"$SOURCE\""
+  RAR_COMMAND+=" \"$SOURCE_DIR/$RAR_FILE\" \"$SOURCE\""
+
+  # 切换到文件所在目录
+  cd "$SOURCE_DIR" || exit 1
 
   # 压缩文件夹为RAR文件
   eval "$RAR_COMMAND"
