@@ -1,11 +1,11 @@
 #ubuntu
 
-ubuntu 维护脚本 部署
+维护
 ```
 wget --no-check-certificate -O ubuntu-maintained.sh https://raw.githubusercontent.com/cautious1064/ubuntu/main/ubuntu-maintained.sh && chmod a+x ubuntu-maintained.sh && bash ubuntu-maintained.sh
 ```
 
-系统版本 升级脚本 
+版本升级 
 ```
 wget --no-check-certificate -O upgrade.sh https://github.com/cautious1064/ubuntu/raw/main/upgrade.sh && chmod a+x upgrade.sh && bash upgrade.sh
 ```
@@ -21,7 +21,7 @@ Docker-compose 克隆
 ```
 wget -O /root/docker-compose.yml https://raw.githubusercontent.com/cautious1064/ubuntu/main/docker-compose.yml
 ```
-Debian 密钥登入
+ubuntu 密钥登入
 ```
 wget --no-check-certificate -O sshkey.sh https://raw.githubusercontent.com/cautious1064/ubuntu/main/sshkey.sh && chmod a+x sshkey.sh && bash sshkey.sh
 ```
