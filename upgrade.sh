@@ -9,6 +9,7 @@ fi
 # Update software package lists
 echo "Updating software package lists..."
 apt update
+apt upgrade -y
 
 # Install update-manager-core
 echo "Installing update-manager-core..."
