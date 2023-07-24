@@ -26,26 +26,35 @@ else
   sed -i 's/Prompt=normal/Prompt=lts/' /etc/update-manager/release-upgrades
 fi
 
+# 定义升级函数
+perform_upgrade() {
+  # 更新软件源并升级已安装的软件包
+  apt update
+  apt upgrade -y
+
+  # 安装升级工具
+  apt install -y update-manager-core
+
+  # 开始升级 Ubuntu 版本，并将错误日志记录到文件
+  do-release-upgrade 2> /tmp/upgrade_error.log
+
+  # 检查升级是否成功
+  if [ $? -eq 0 ]; then
+    echo "Ubuntu 版本升级完成！"
+  else
+    echo "Ubuntu 版本升级过程中发生错误，请检查日志以便解决问题。"
+    cat /tmp/upgrade_error.log  # 输出错误日志内容
+  fi
+
+  # 删除临时错误日志文件
+  rm /tmp/upgrade_error.log
+}
+
 read -p "是否要升级到新的版本？(y/n): " choice
 
-if [ "$choice" != "y" ] && [ "$choice" != "Y" ]; then
-  echo "取消升级操作"
-  exit 0
-fi
-
-# 更新软件源并升级已安装的软件包
-apt update
-apt upgrade -y
-
-# 安装升级工具
-apt install -y update-manager-core
-
-# 开始升级 Ubuntu 版本
-do-release-upgrade
-
-# 检查升级是否成功，可以根据实际情况进行处理
-if [ $? -eq 0 ]; then
-  echo "Ubuntu 版本升级完成！"
+# 检查用户输入是否为合法选项
+if [[ "$choice" == "y" || "$choice" == "Y" ]]; then
+  perform_upgrade
 else
-  echo "Ubuntu 版本升级过程中发生错误，请检查日志以及终端输出，以便解决问题。"
+  echo "取消升级操作"
 fi
