@@ -1,19 +1,26 @@
 #!/bin/bash
 
-# 提示用户备份数据
-echo "请在执行升级前备份重要数据！"
-read -p "按回车键继续升级，或按 Ctrl+C 取消："
+# Check if the script is run with sudo/root privileges
+if [ "$(id -u)" -ne 0 ]; then
+  echo "This script must be run with sudo or root privileges."
+  exit 1
+fi
 
-# 更新软件包列表
-sudo apt update
+# Update software package lists
+echo "Updating software package lists..."
+apt update
 
-# 更新已安装的软件包
-sudo apt upgrade -y
+# Install update-manager-core
+echo "Installing update-manager-core..."
+apt install -y update-manager-core
 
-# 执行系统升级
-sudo do-release-upgrade
+# Perform the version upgrade
+echo "Performing Ubuntu version upgrade..."
+do-release-upgrade
 
-# 如果升级完成后需要重启，提示用户重启
-echo "系统升级已完成！"
-read -p "按回车键重启计算机，或按 Ctrl+C 取消重启："
-sudo reboot
+# Check the exit status of do-release-upgrade
+if [ $? -eq 0 ]; then
+  echo "Ubuntu version upgrade completed successfully."
+else
+  echo "Ubuntu version upgrade encountered some issues. Please check the output above for details."
+fi
