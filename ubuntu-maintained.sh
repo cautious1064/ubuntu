@@ -22,20 +22,6 @@ install_docker_and_compose() {
   fi
 }
 
-# 安装aaPanel
-install_aapanel() {
-  echo "正在下载并执行aaPanel安装脚本..."
-  wget -O install.sh http://www.aapanel.com/script/install-ubuntu_6.0_en.sh && bash install.sh aapanel
-  echo "aaPanel安装完成！"
-}
-
-# 安装CasaOS
-install_casaos() {
-  echo "正在安装CasaOS..."
-  curl -fsSL https://get.casaos.io | sudo bash
-  echo "CasaOS安装完成！"
-}
-
 # 开启BBR FQ
 enable_bbr_fq() {
   # 检查当前系统是否已经开启BBR FQ
@@ -65,9 +51,9 @@ clear_container_logs() {
 # 更新和清理系统
 update_and_cleanup_system() {
   echo "正在更新软件包和基础工具..."
-  apt update -y
-  apt upgrade -y
-  apt install curl sudo neofetch vim -y
+  sudo apt update -y
+  sudo apt upgrade -y
+  sudo apt install curl sudo neofetch vim -y
   echo "软件包更新完成！"
 
   echo "垃圾清理..."
@@ -151,12 +137,10 @@ show_main_menu() {
   clear
   echo "脚本功能列表"
   echo "1. 安装Docker和Docker Compose"
-  echo "2. 安装aaPanel"
-  echo "3. 安装CasaOS"
-  echo "4. 开启BBR FQ"
-  echo "5. 清空所有容器日志"
-  echo "6. 更新和清理系统"
-  echo "7. 删除指定的Docker容器和相关映射目录"
+  echo "2. 开启BBR FQ"
+  echo "3. 清空所有容器日志"
+  echo "4. 更新和清理系统"
+  echo "5. 删除指定的Docker容器和相关映射目录"
   echo "0. 退出"
   echo
   read -p "请输入选项数字: " option
@@ -164,12 +148,10 @@ show_main_menu() {
 
   case $option in
     1) install_docker_and_compose ;;
-    2) install_aapanel ;;
-    3) install_casaos ;;
-    4) enable_bbr_fq ;;
-    5) clear_container_logs ;;
-    6) update_and_cleanup_system ;;
-    7) delete_container ;;
+    2) enable_bbr_fq ;;
+    3) clear_container_logs ;;
+    4) update_and_cleanup_system ;;
+    5) delete_container ;;
     0) exit ;;
     *) echo "无效的选项。请重新输入。" ;;
   esac
