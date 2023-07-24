@@ -7,7 +7,7 @@ wget --no-check-certificate -O debian-maintained.sh https://raw.githubuserconten
 
 系统版本 升级脚本 
 ```
-wget --no-check-certificate -O upgrade.sh https://raw.githubusercontent.com/cautious1064/debian/main/upgrade.sh && chmod a+x upgrade.sh && bash upgrade.sh
+curl -sSL https://raw.githubusercontent.com/cautious1064/debian/main/upgrade.sh | bash
 ```
 
 RAR 归档脚本 #维护中勿用
