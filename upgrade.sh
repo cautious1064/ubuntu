@@ -16,26 +16,26 @@ fi
 source /etc/os-release
 
 echo "当前运行的 Ubuntu 版本为: $PRETTY_NAME"
-read -p "是否要继续升级到新版本？(y/n): " choice
+read -p "是否要升级到新的 LTS 版本？(y/n): " choice
 
 if [ "$choice" != "y" ] && [ "$choice" != "Y" ]; then
   echo "取消升级操作"
   exit 0
 fi
 
-# 更新已安装的软件包和系统组件
+# 确保系统已经更新到最新版本
 apt update
 apt upgrade -y
 
 # 安装升级工具
 apt install -y update-manager-core
 
-# 开始升级 Ubuntu 版本
-do-release-upgrade
+# 开始升级 Ubuntu 版本 (LTS 到 LTS)
+do-release-upgrade -d
 
 # 检查升级是否成功，可以根据实际情况进行处理
 if [ $? -eq 0 ]; then
-  echo "Ubuntu 版本升级完成！"
+  echo "Ubuntu LTS 版本升级完成！"
 else
   echo "Ubuntu 版本升级过程中发生错误，请检查日志以及终端输出，以便解决问题。"
 fi
