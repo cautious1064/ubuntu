@@ -21,11 +21,12 @@ echo "当前运行的 Ubuntu 版本为: $PRETTY_NAME"
 if [[ "$UBUNTU_CODENAME" == "bionic" ]]; then
   echo "当前运行的 Ubuntu 版本为 LTS 版本"
 else
-  echo "当前运行的 Ubuntu 版本不是 LTS 版本，不支持自动升级"
-  exit 1
+  echo "当前运行的 Ubuntu 版本不是 LTS 版本，将修改为 LTS 版本"
+  # 将当前版本修改为 LTS 版本
+  sed -i 's/Prompt=normal/Prompt=lts/' /etc/update-manager/release-upgrades
 fi
 
-read -p "是否要升级到新的 LTS 版本？(y/n): " choice
+read -p "是否要升级到新的版本？(y/n): " choice
 
 if [ "$choice" != "y" ] && [ "$choice" != "Y" ]; then
   echo "取消升级操作"
@@ -39,12 +40,12 @@ apt upgrade -y
 # 安装升级工具
 apt install -y update-manager-core
 
-# 开始升级 Ubuntu 版本 (LTS 到 LTS)
+# 开始升级 Ubuntu 版本
 do-release-upgrade
 
 # 检查升级是否成功，可以根据实际情况进行处理
 if [ $? -eq 0 ]; then
-  echo "Ubuntu LTS 版本升级完成！"
+  echo "Ubuntu 版本升级完成！"
 else
   echo "Ubuntu 版本升级过程中发生错误，请检查日志以及终端输出，以便解决问题。"
 fi
