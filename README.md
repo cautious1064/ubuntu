@@ -1,4 +1,4 @@
-#ubuntu
+ubuntu
 
 维护
 ```
