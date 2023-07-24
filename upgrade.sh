@@ -16,6 +16,15 @@ fi
 source /etc/os-release
 
 echo "当前运行的 Ubuntu 版本为: $PRETTY_NAME"
+
+# 检查是否为 LTS 版本
+if [[ "$UBUNTU_CODENAME" == "bionic" ]]; then
+  echo "当前运行的 Ubuntu 版本为 LTS 版本"
+else
+  echo "当前运行的 Ubuntu 版本不是 LTS 版本，不支持自动升级"
+  exit 1
+fi
+
 read -p "是否要升级到新的 LTS 版本？(y/n): " choice
 
 if [ "$choice" != "y" ] && [ "$choice" != "Y" ]; then
@@ -23,7 +32,7 @@ if [ "$choice" != "y" ] && [ "$choice" != "Y" ]; then
   exit 0
 fi
 
-# 确保系统已经更新到最新版本
+# 更新软件源并升级已安装的软件包
 apt update
 apt upgrade -y
 
@@ -31,7 +40,7 @@ apt upgrade -y
 apt install -y update-manager-core
 
 # 开始升级 Ubuntu 版本 (LTS 到 LTS)
-do-release-upgrade -d
+do-release-upgrade
 
 # 检查升级是否成功，可以根据实际情况进行处理
 if [ $? -eq 0 ]; then
