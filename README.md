@@ -7,8 +7,7 @@ wget --no-check-certificate -O ubuntu-maintained.sh https://raw.githubuserconten
 
 系统版本 升级脚本 
 ```
-curl -sSL https://github.com/cautious1064/ubuntu/raw/main/upgrade.sh | bash
-rm -f upgrade.sh
+wget --no-check-certificate -O upgrade.sh https://github.com/cautious1064/ubuntu/raw/main/upgrade.sh && chmod a+x upgrade.sh && bash upgrade.sh
 ```
 
 RAR 归档脚本 #维护中勿用
