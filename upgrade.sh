@@ -15,23 +15,6 @@ apt upgrade -y
 echo "Installing update-manager-core..."
 apt install -y update-manager-core
 
-# Modify the sources.list file
-sources_list="/etc/apt/sources.list"
-backup_sources_list="/etc/apt/sources.list.bak"
-if [ -f "$sources_list" ]; then
-  echo "Backing up existing sources.list to $backup_sources_list"
-  cp "$sources_list" "$backup_sources_list"
-fi
-
-# Add official Ubuntu sources
-echo "Adding official Ubuntu sources..."
-cat <<EOF > "$sources_list"
-deb http://archive.ubuntu.com/ubuntu/ $(lsb_release -sc) main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ $(lsb_release -sc)-updates main restricted universe multiverse
-deb http://archive.ubuntu.com/ubuntu/ $(lsb_release -sc)-backports main restricted universe multiverse
-deb http://security.ubuntu.com/ubuntu/ $(lsb_release -sc)-security main restricted universe multiverse
-EOF
-
 # Update software package lists again
 echo "Updating software package lists..."
 apt update
