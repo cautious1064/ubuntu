@@ -1,5 +1,15 @@
 version: "3"
 services:
+
+  aapanel:
+    image: aapanel/aapanel:lib
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - ~/website_data:/www/wwwroot
+      - ~/mysql_data:/www/server/data
+      - ~/vhost:/www/server/panel/vhost
+
   alist:
     image: xhofe/alist
     container_name: alist
@@ -12,32 +22,6 @@ services:
       - UMASK=022
     volumes:
       - /etc/alist:/opt/alist/data
-
-  watchtower:
-    image: containrrr/watchtower
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
-    restart: unless-stopped
-    command: --cleanup
-
-  x-ui:
-    image: enwaiax/x-ui
-    restart: unless-stopped
-    network_mode: host
-
-  nginx:
-    image: jc21/nginx-proxy-manager
-    restart: unless-stopped
-    network_mode: host
-    volumes:
-      - /root/data:/data
-      - /root/letsencrypt:/etc/letsencrypt
-
-  warp-proxy:
-    image: yarmak/warp-proxy
-    ports:
-      - 40000:40000
-    restart: always
 
   chatgpt-web:
     image: chenzhaoyu94/chatgpt-web
@@ -55,24 +39,6 @@ services:
       - SOCKS_PROXY_HOST=xxxx
       - SOCKS_PROXY_PORT=xxxx
 
-  qinglong:
-    image: whyour/qinglong
-    container_name: qinglong
-    hostname: qinglong
-    restart: unless-stopped
-    ports:
-      - 5700:5700
-    volumes:
-      - /root/ql/data:/ql/data
-
-  aapanel:
-    image: aapanel/aapanel:lib
-    network_mode: host
-    restart: unless-stopped
-    volumes:
-      - ~/website_data:/www/wwwroot
-      - ~/mysql_data:/www/server/data
-      - ~/vhost:/www/server/panel/vhost
   mcserver:
     image: marctv/minecraft-papermc-server:latest
     container_name: mcserver
@@ -85,3 +51,39 @@ services:
     ports:
       - "25565:25565"
     tty: true
+
+  nginx:
+    image: jc21/nginx-proxy-manager
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /root/data:/data
+      - /root/letsencrypt:/etc/letsencrypt
+
+  qinglong:
+    image: whyour/qinglong
+    container_name: qinglong
+    hostname: qinglong
+    restart: unless-stopped
+    ports:
+      - 5700:5700
+    volumes:
+      - /root/ql/data:/ql/data
+
+  warp-proxy:
+    image: yarmak/warp-proxy
+    ports:
+      - 40000:40000
+    restart: always
+
+  watchtower:
+    image: containrrr/watchtower
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+    command: --cleanup
+
+  x-ui:
+    image: enwaiax/x-ui
+    restart: unless-stopped
+    network_mode: host
