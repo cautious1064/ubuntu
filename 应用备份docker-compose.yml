@@ -73,3 +73,15 @@ services:
       - ~/website_data:/www/wwwroot
       - ~/mysql_data:/www/server/data
       - ~/vhost:/www/server/panel/vhost
+  mcserver:
+    image: marctv/minecraft-papermc-server:latest
+    container_name: mcserver
+    restart: unless-stopped
+    environment:
+      - MEMORYSIZE=1G
+      - PAPERMC_FLAGS=
+    volumes:
+      - /root/mcserver:/data:rw
+    ports:
+      - "25565:25565"
+    tty: true
