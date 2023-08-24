@@ -20,3 +20,7 @@ ubuntu 密钥登入
 ```
 wget --no-check-certificate -O sshkey.sh https://raw.githubusercontent.com/cautious1064/ubuntu/main/sshkey.sh && chmod a+x sshkey.sh && bash sshkey.sh
 ```
+ # RAR
+ ```
+wget --no-check-certificate -O rar-maintained.sh https://raw.githubusercontent.com/cautious1064/ubuntu/main/rar-maintained.sh && chmod a+x rar-maintained.sh && bash rar-maintained.sh
+```
