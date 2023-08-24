@@ -10,7 +10,7 @@ select choice in "压缩文件/文件夹" "解压RAR文件" "退出"; do
                 echo "路径不存在"
                 exit 1
             fi
-            
+
             output_filename=$(basename "$filepath").rar
             rar a "$output_filename" "$filepath"
             echo "压缩完成"
@@ -21,8 +21,10 @@ select choice in "压缩文件/文件夹" "解压RAR文件" "退出"; do
                 echo "路径不存在"
                 exit 1
             fi
-            
-            unrar x "$filepath"
+
+            # 提取目标路径
+            target_dir=$(dirname "$filepath")
+            unrar x "$filepath" "$target_dir"
             echo "解压完成"
             ;;
         "退出")
