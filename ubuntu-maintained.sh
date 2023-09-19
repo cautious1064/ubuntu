@@ -5,12 +5,10 @@ install_docker_and_compose() {
   # 更新系统软件包
   sudo apt update
   # 安装Docker引擎
-  curl -fsSL https://get.docker.com -o get-docker.sh
-  sudo sh get-docker.sh
+  sudo apt install docker.io
   # 安装Docker Compose
   compose_version=$(curl -sSLI -o /dev/null -w %{url_effective} https://github.com/docker/compose/releases/latest | awk -F / '{print $NF}')
-  sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-  sudo chmod +x /usr/local/bin/docker-compose
+  sudo apt install docker-compose
   sudo apt install -y jq
 
   if [[ -x "$(command -v docker)" && -x "$(command -v docker-compose)" ]]; then
