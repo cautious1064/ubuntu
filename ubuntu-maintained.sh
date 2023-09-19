@@ -2,16 +2,16 @@
 
 # 安装Docker和Docker Compose
 install_docker_and_compose() {
-  # 更新系统软件包
+  echo "更新系统软件包..."
   sudo apt update
-  # 安装Docker引擎
+  echo "安装Docker引擎..."
   sudo apt install docker.io
-  # 安装Docker Compose
+  echo "安装Docker Compose..."
   sudo apt install docker-compose
   sudo apt install -y jq
 
   if [[ -x "$(command -v docker)" && -x "$(command -v docker-compose)" ]]; then
-    echo "Docker和Docker Compose安装完成！"
+    echo "成功安装Docker和Docker Compose！"
     echo "Docker版本：$(docker --version)"
     echo "Docker Compose版本：$(docker-compose --version)"
   else
@@ -31,7 +31,7 @@ enable_bbr_fq() {
     sudo sysctl -p
 
     if sysctl net.ipv4.tcp_congestion_control | grep -q "bbr"; then
-      echo "BBR FQ已成功开启！"
+      echo "成功开启BBR FQ！"
     else
       echo "无法开启BBR FQ，请检查系统配置。"
     fi
@@ -113,8 +113,6 @@ delete_container() {
     fi
   done
 
-  # 其他清理操作...
-
   echo "垃圾清理..."
   sudo apt autoclean
   sudo apt autoremove -y
@@ -123,8 +121,6 @@ delete_container() {
   echo "日志文件清理..."
   sudo find /var/log -type f -delete
   echo "日志文件清理完成！"
-
-  # 其他清理操作...
 
   echo "删除容器和相关映射目录完成！"
 }
