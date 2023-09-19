@@ -7,7 +7,6 @@ install_docker_and_compose() {
   # 安装Docker引擎
   sudo apt install docker.io
   # 安装Docker Compose
-  compose_version=$(curl -sSLI -o /dev/null -w %{url_effective} https://github.com/docker/compose/releases/latest | awk -F / '{print $NF}')
   sudo apt install docker-compose
   sudo apt install -y jq
 
