@@ -71,7 +71,13 @@ update_and_cleanup_system() {
     echo "备份目录 $backup_directory 不存在。"
   fi
 
-  echo "系统更新、垃圾清理、日志清理和备份清理完成！"
+  echo "清除无用内核..."
+  sudo apt purge $(dpkg --list | grep '^rc' | awk '{print $2}') -y
+
+  echo "清理缓存文件..."
+  sudo apt clean
+
+  echo "系统更新、垃圾清理、日志清理、备份清理、无用内核清理和缓存清理完成！"
 }
 
 # 删除指定的Docker容器和相关映射目录
