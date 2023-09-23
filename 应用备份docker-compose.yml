@@ -70,20 +70,9 @@ services:
     volumes:
       - /root/ql/data:/ql/data
 
-  warp-proxy:
-    image: yarmak/warp-proxy
-    ports:
-      - 40000:40000
-    restart: always
-
   watchtower:
     image: containrrr/watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
     command: --cleanup
-
-  x-ui:
-    image: enwaiax/x-ui
-    restart: unless-stopped
-    network_mode: host
