@@ -1,15 +1,5 @@
 version: "3"
 services:
-
-  aapanel:
-    image: aapanel/aapanel:lib
-    network_mode: host
-    restart: unless-stopped
-    volumes:
-      - ~/website_data:/www/wwwroot
-      - ~/mysql_data:/www/server/data
-      - ~/vhost:/www/server/panel/vhost
-
   alist:
     image: xhofe/alist
     container_name: alist
