@@ -12,7 +12,8 @@ if [ "$choice" == "1" ]; then
   read source_path
   echo "请输入打包后的文件名:"
   read zip_filename
-  zip -r "$zip_filename.zip" "$source_path"
+  echo "正在打包文件..."
+  zip -r -q - "$source_path" | pv -p -s $(du -sb "$source_path" | awk '{print $1}') | gzip > "$zip_filename.zip"
   echo "文件已打包完成。"
 
 # 解压文件
@@ -21,7 +22,8 @@ elif [ "$choice" == "2" ]; then
   read zip_path
   echo "请输入解压后的目标文件夹路径:"
   read destination_folder
-  unzip "$zip_path" -d "$destination_folder"
+  echo "正在解压文件..."
+  pv "$zip_path" | gunzip -c - | tar x -C "$destination_folder"
   echo "文件已解压完成。"
 
 # 选择无效
