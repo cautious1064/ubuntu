@@ -1,78 +1,30 @@
 #!/bin/bash
 
-# 菜单函数
-show_menu() {
-    echo "请选择一个操作:"
-    echo "1. 压缩文件或文件夹为ZIP"
-    echo "2. 解压缩ZIP文件"
-    echo "3. 退出"
-}
+# 提示用户选择操作
+echo "请选择操作:"
+echo "1. 打包文件"
+echo "2. 解压文件"
+read choice
 
-# 压缩函数
-compress_files() {
-    # 输入要压缩的文件或文件夹路径
-    read -p "请输入要压缩的文件或文件夹路径: " source_path
+# 打包文件
+if [ "$choice" == "1" ]; then
+  echo "请输入要打包的文件或目录的路径:"
+  read source_path
+  echo "请输入打包后的文件名:"
+  read zip_filename
+  zip -r "$zip_filename.zip" "$source_path"
+  echo "文件已打包完成。"
 
-    # 检查路径是否存在
-    if [ ! -e "$source_path" ]; then
-        echo "路径不存在，请重新输入."
-        return
-    fi
+# 解压文件
+elif [ "$choice" == "2" ]; then
+  echo "请输入要解压的ZIP文件的路径:"
+  read zip_path
+  echo "请输入解压后的目标文件夹路径:"
+  read destination_folder
+  unzip "$zip_path" -d "$destination_folder"
+  echo "文件已解压完成。"
 
-    # 获取源文件或文件夹的基本名称
-    source_basename=$(basename "$source_path")
-
-    # 创建UTF-8编码的ZIP压缩文件
-    echo "正在创建UTF-8编码的ZIP压缩文件..."
-    zip -r -O UTF-8 "$source_basename.zip" "$source_path"
-
-    if [ $? -eq 0 ]; then
-        echo "压缩完成。"
-    else
-        echo "压缩过程中出现错误，请检查输入和路径，然后重试。"
-    fi
-}
-
-# 解压缩函数
-extract_files() {
-    # 输入要解压的ZIP文件路径
-    read -p "请输入要解压的ZIP文件路径: " zip_path
-
-    # 检查ZIP文件是否存在
-    if [ ! -e "$zip_path" ]; then
-        echo "ZIP文件不存在，请重新输入."
-        return
-    fi
-
-    # 解压ZIP文件
-    echo "正在解压ZIP文件..."
-    unzip "$zip_path"
-
-    if [ $? -eq 0 ]; then
-        echo "解压完成。"
-    else
-        echo "解压过程中出现错误，请检查输入和路径，然后重试。"
-    fi
-}
-
-# 主循环
-while true; do
-    show_menu
-    read -p "请选择操作（1/2/3）: " choice
-
-    case $choice in
-    1)
-        compress_files
-        ;;
-    2)
-        extract_files
-        ;;
-    3)
-        echo "退出脚本。"
-        exit 0
-        ;;
-    *)
-        echo "无效的选项，请重新选择。"
-        ;;
-    esac
-done
+# 选择无效
+else
+  echo "无效的选择。请重新运行脚本并选择1或2。"
+fi
