@@ -33,19 +33,18 @@ compress_files() {
     fi
 
     # 输入压缩密码
-    read -s -p "请输入压缩密码: " password
-    echo
-
-    # 输入目标路径
-    read -p "请输入目标路径: " target_path
+    read -p "请输入压缩密码: " password
 
     # 自动计算分卷大小，默认单位为GB
     read -p "请输入分卷大小（默认单位为GB，直接回车使用默认值）: " volume_size
     volume_size=${volume_size:-5}  # 默认值为5GB
 
+    # 获取源文件或文件夹的基本名称
+    source_basename=$(basename "$source_path")
+
     # 创建RAR压缩文件
     echo "正在创建RAR压缩文件..."
-    rar a -p"$password" -v${volume_size}g "$target_path/compressed.rar" "$source_path"
+    rar a -p"$password" -v${volume_size}g "$source_basename.rar" "$source_path"
 
     if [ $? -eq 0 ]; then
         echo "压缩完成。"
@@ -56,7 +55,7 @@ compress_files() {
 
 # 解压缩函数
 extract_files() {
-    # 输入要解压的文件路径
+    # 输入要解压的RAR文件路径
     read -p "请输入要解压的RAR文件路径: " rar_path
 
     # 检查RAR文件是否存在
@@ -66,15 +65,11 @@ extract_files() {
     fi
 
     # 输入解压密码
-    read -s -p "请输入解压密码: " password
-    echo
-
-    # 输入目标路径
-    read -p "请输入解压到的目标路径: " target_path
+    read -p "请输入解压密码: " password
 
     # 解压RAR文件
     echo "正在解压RAR文件..."
-    rar x -p"$password" "$rar_path" "$target_path"
+    unrar x -p"$password" "$rar_path"
 
     if [ $? -eq 0 ]; then
         echo "解压完成。"
