@@ -1,4 +1,5 @@
 #!/bin/bash
+# -*- coding: utf-8 -*-
 
 # 提示用户选择操作
 echo "请选择操作:"
