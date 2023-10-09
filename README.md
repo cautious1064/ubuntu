@@ -2,7 +2,7 @@
 
 维护
 ```
-wget --no-check-certificate -O - https://raw.githubusercontent.com/cautious1064/ubuntu/main/ubuntu-maintained.sh | bash
+wget --no-check-certificate -O ubuntu-maintained.sh https://raw.githubusercontent.com/cautious1064/ubuntu/main/ubuntu-maintained.sh && chmod a+x ubuntu-maintained.sh && bash ubuntu-maintained.sh
 ```
 
 # 快速部署 
