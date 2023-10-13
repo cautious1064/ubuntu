@@ -2,7 +2,7 @@
 
 维护
 ```
-wget --no-check-certificate -O ubuntu-maintained.sh https://raw.githubusercontent.com/cautious1064/ubuntu/main/ubuntu-maintained.sh && chmod a+x ubuntu-maintained.sh && bash ubuntu-maintained.sh
+wget -O /root/ubuntu-maintained.sh https://raw.githubusercontent.com/cautious1064/ubuntu/main/ubuntu-maintained.sh && chmod a+x ubuntu-maintained.sh && bash ubuntu-maintained.sh
 ```
 
 # 快速部署 
@@ -13,9 +13,9 @@ wget -O /root/docker-compose.yml https://raw.githubusercontent.com/cautious1064/
 ```
 Ubuntu 密钥登入
 ```
-wget --no-check-certificate -O - https://raw.githubusercontent.com/cautious1064/ubuntu/main/sshkey.sh | bash
+wget -O /root/sshkey.sh https://raw.githubusercontent.com/cautious1064/ubuntu/main/sshkey.sh | bash
 ```
  # RAR
  ```
-wget --no-check-certificate -O - https://raw.githubusercontent.com/cautious1064/ubuntu/main/rar-maintained.sh | bash
+wget -O /root/rar-maintained.sh https://raw.githubusercontent.com/cautious1064/ubuntu/main/rar-maintained.sh | bash
 ```
