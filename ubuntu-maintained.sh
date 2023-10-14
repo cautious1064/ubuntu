@@ -39,6 +39,7 @@ backup_container() {
 
     echo "备份完成：$BACKUP_DIR/$BACKUP_NAME"
 }
+
 # 2. 恢复容器
 restore_container() {
     echo "请输入备份文件的路径: "
@@ -75,6 +76,7 @@ restore_container() {
 
     echo "恢复完成：$NEW_CONTAINER_NAME"
 }
+
 # 3. 安装Docker和Docker Compose
 install_docker_and_compose() {
   echo "更新系统软件包..."
@@ -93,12 +95,13 @@ install_docker_and_compose() {
     echo "安装Docker和Docker Compose失败，请检查配置和网络连接。"
   fi
 }
+
 # 4. 开启BBR FQ
 enable_bbr_fq() {
   # 检查当前系统是否已经开启BBR FQ
   if sysctl net.ipv4.tcp_congestion_control | grep -q "bbr"; then
-    echo "BBR FQ已经开启，无需执行操作。"
-  else {
+    echo "BBR FQ已经开启，无需执行操作."
+  else
     echo "正在开启BBR FQ..."
     echo "net.core.default_qdisc=fq" | sudo tee -a /etc/sysctl.conf
     echo "net.ipv4.tcp_congestion_control=bbr" | sudo tee -a /etc/sysctl.conf
@@ -108,7 +111,7 @@ enable_bbr_fq() {
       echo "成功开启BBR FQ！"
     else
       echo "无法开启BBR FQ，请检查系统配置。"
-    }
+    fi
   fi
 }
 
@@ -118,6 +121,7 @@ clear_container_logs() {
   sudo find /var/lib/docker/containers/ -type f -name '*.log' -delete
   echo "容器日志清理完成！"
 }
+
 # 6. 更新和清理系统
 update_and_cleanup_system() {
   echo "正在更新软件包和基础工具..."
@@ -152,6 +156,7 @@ update_and_cleanup_system() {
 
   echo "系统更新、垃圾清理、日志清理、备份清理、无用内核清理和缓存清理完成！"
 }
+
 # 7. 删除指定的Docker容器和相关映射目录
 delete_container() {
   read -p "请输入要删除的容器ID: " container_id
@@ -159,7 +164,7 @@ delete_container() {
   if [ -z "$container_id" ]; then
     echo "未提供容器ID。"
     return
-  fi
+  }
 
   # 获取容器的映射目录
   container_info=$(sudo docker inspect --format='{{json .Mounts}}' "$container_id")
@@ -175,7 +180,7 @@ delete_container() {
   if [ ${#directories[@]} -eq 0 ]; then
     echo "容器没有映射目录。"
     return
-  fi
+  }
 
   echo "正在停止并删除容器 $container_id..."
   sudo docker stop "$container_id"
@@ -202,6 +207,7 @@ delete_container() {
 
   echo "删除容器和相关映射目录完成！"
 }
+
 # 主菜单
 while true; do
     echo "选择一个操作:"
