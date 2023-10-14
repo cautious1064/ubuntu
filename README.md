@@ -17,6 +17,9 @@ wget -O /root/sshkey.sh https://raw.githubusercontent.com/cautious1064/ubuntu/ma
 ```
 Docker 容器备份
 ```
+wget -O /root/docker-backup.sh https://raw.githubusercontent.com/cautious1064/ubuntu/main/docker-backup.sh && chmod +x /root/docker-backup.sh && bash /root/docker-backup.sh
+
+```
  # RAR
  ```
 wget -O /root/rar-maintained.sh https://raw.githubusercontent.com/cautious1064/ubuntu/main/rar-maintained.sh && chmod a+x /root/rar-maintained.sh && bash /root/rar-maintained.sh
