@@ -17,7 +17,7 @@ backup_container() {
     if ! docker ps -q -f id=$CONTAINER_ID &>/dev/null; then
         echo "容器ID无效"
         return
-    }
+    fi
 
     # 停止容器
     docker stop $CONTAINER_ID
