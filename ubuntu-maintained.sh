@@ -82,9 +82,9 @@ install_docker_and_compose() {
   echo "更新系统软件包..."
   sudo apt update
   echo "安装Docker引擎..."
-  sudo apt install docker.io
+  sudo apt install docker.io -y
   echo "安装Docker Compose..."
-  sudo apt install docker-compose
+  sudo apt install docker-compose -y
   sudo apt install -y jq
 
   if [[ -x "$(command -v docker)" && -x "$(command -v docker-compose)" ]]; then
@@ -171,7 +171,7 @@ delete_container() {
   if [ -z "$container_info" ]; then
     echo "无法获取容器的映射目录信息。"
     return
-  fi
+  }
 
   # 解析容器的映射目录路径
   declare -a directories=()
