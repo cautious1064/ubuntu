@@ -15,7 +15,7 @@ backup_container() {
     if ! docker ps -q -f id="$CONTAINER_ID" &>/dev/null; then
         echo "容器ID无效"
         return
-    }
+    fi
 
     # 停止容器
     docker stop "$CONTAINER_ID" &>/dev/null
@@ -30,7 +30,7 @@ backup_container() {
 
     # 打包备份文件
     BACKUP_NAME="container-backup-$(date +"%Y%m%d%H%M%S").tar.gz"
-    tar -czvf "$BACKUP_DIR/$BACKUP_NAME" -C "$BACKUP_DIR" "$SNAPSHOT_NAME" "$METADATA_FILE"
+    tar -czvf "$BACKUP_DIR/$BACKUP_NAME" -C "$BACKUP_DIR" "$SNAPSHOT_NAME" $(basename "$METADATA_FILE")
 
     # 启动源容器
     docker start "$CONTAINER_ID" &>/dev/null
@@ -67,11 +67,11 @@ restore_container() {
     if [ $? -ne 0 ]; then
         echo "无法创建新容器"
         return
-    }
+    fi
 
     # 恢复容器元数据
     docker create --name temp-container --volume /temp-volume alpine /bin/sh
-    docker cp "$BACKUP_DIR/$METADATA_FILE" temp-container:/metadata.json
+    docker cp "$BACKUP_DIR/$(basename $METADATA_FILE)" temp-container:/metadata.json
     docker cp temp-container:/metadata.json "$NEW_CONTAINER_NAME:/metadata.json"
     docker rm -f temp-container &>/dev/null
 
