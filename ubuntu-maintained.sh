@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 功能1：安装 Docker 和 Docker Compose
-安装 docker 和 compose() {
+安装_docker和_compose() {
   echo "正在更新系统软件包..."
   sudo apt update
   echo "正在安装 Docker Engine..."
@@ -187,12 +187,12 @@
   echo
 
   case $option in
-    1) 安装 docker 和 compose ;;
+    1) 安装_docker和_compose ;;
     2) 启用_bbr_fq ;;
     3) 清除容器日志 ;;
     4) 更新和清理系统 ;;
     5) 删除容器 ;;
-    6) 添加 SSH密钥 ;;  # 调用新的函数
+    6) 添加_SSH密钥 ;;  # 调用新的函数
     0) exit ;;
 
     *) echo "无效选项，请输入有效选项。" ;;
