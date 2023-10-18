@@ -15,6 +15,11 @@ Ubuntu 密钥登入
 ```
 wget -O /root/sshkey.sh https://raw.githubusercontent.com/cautious1064/ubuntu/main/sshkey.sh && chmod a+x /root/sshkey.sh && bash /root/sshkey.sh
 ```
+Ubuntu DNS修改
+```
+wget -O /root/ubuntu-dns.sh https://github.com/cautious1064/ubuntu/raw/main/ubuntu-dns.sh && chmod a+x /root/ubuntu-dns.sh && bash /root/ubuntu-dns.sh
+```
+
 Docker 容器备份
 ```
 wget -O /root/docker-backup.sh https://raw.githubusercontent.com/cautious1064/ubuntu/main/docker-backup.sh && chmod +x /root/docker-backup.sh && bash /root/docker-backup.sh
