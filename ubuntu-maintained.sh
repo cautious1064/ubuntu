@@ -1,166 +1,166 @@
 #!/bin/bash
 
-# Function to install Docker and Docker Compose
-install_docker_and_compose() {
-  echo "Updating system packages..."
+# 功能1：安装 Docker 和 Docker Compose
+安装_docker和_compose() {
+  echo "正在更新系统软件包..."
   sudo apt update
-  echo "Installing Docker Engine..."
+  echo "正在安装 Docker Engine..."
   sudo apt install docker.io
-  echo "Installing Docker Compose..."
+  echo "正在安装 Docker Compose..."
   sudo apt install docker-compose
   sudo apt install -y jq
 
   if [[ -x "$(command -v docker)" && -x "$(command -v docker-compose)" ]]; then
-    echo "Successfully installed Docker and Docker Compose!"
-    echo "Docker version: $(docker --version)"
-    echo "Docker Compose version: $(docker-compose --version)"
+    echo "成功安装 Docker 和 Docker Compose！"
+    echo "Docker 版本: $(docker --version)"
+    echo "Docker Compose 版本: $(docker-compose --version)"
   else
-    echo "Failed to install Docker and Docker Compose. Please check your configuration and network connection."
+    echo "无法安装 Docker 和 Docker Compose。请检查您的配置和网络连接。"
   fi
 }
 
-# Function to enable BBR FQ
-enable_bbr_fq() {
-  # Check if BBR FQ is already enabled
+# 功能2：启用 BBR FQ
+启用_bbr_fq() {
+  # 检查是否已启用 BBR FQ
   if sysctl net.ipv4.tcp_congestion_control | grep -q "bbr"; then
-    echo "BBR FQ is already enabled, no further action needed."
+    echo "BBR FQ 已经启用，无需进一步操作。"
   else
-    echo "Enabling BBR FQ..."
+    echo "正在启用 BBR FQ..."
     echo "net.core.default_qdisc=fq" | sudo tee -a /etc/sysctl.conf
     echo "net.ipv4.tcp_congestion_control=bbr" | sudo tee -a /etc/sysctl.conf
     sudo sysctl -p
 
     if sysctl net.ipv4.tcp_congestion_control | grep -q "bbr"; then
-      echo "BBR FQ enabled successfully!"
+      echo "成功启用 BBR FQ！"
     else
-      echo "Failed to enable BBR FQ. Please check your system configuration."
+      echo "无法启用 BBR FQ。请检查系统配置。"
     fi
   fi
 }
 
-# Function to clear all container logs
-clear_container_logs() {
-  echo "Clearing all container logs..."
+# 功能3：清除所有容器日志
+清除容器日志() {
+  echo "正在清除所有容器日志..."
   sudo find /var/lib/docker/containers/ -type f -name '*.log' -delete
-  echo "Container logs cleaned!"
+  echo "容器日志已清除！"
 }
 
-# Function to update and clean the system
-update_and_cleanup_system() {
-  echo "Updating software packages and basic tools..."
+# 功能4：更新和清理系统
+更新和清理系统() {
+  echo "正在更新软件包和基本工具..."
   sudo apt update -y
   sudo apt upgrade -y
   sudo apt install curl sudo neofetch vim jq -y
-  echo "Software package updates completed!"
+  echo "软件包更新完成！"
 
-  echo "Cleaning up system..."
+  echo "正在清理系统..."
   sudo apt autoclean
   sudo apt autoremove -y
-  echo "System cleanup completed!"
+  echo "系统清理完成！"
 
-  echo "Cleaning up log files..."
+  echo "正在清理日志文件..."
   sudo find /var/log -type f -delete
-  echo "Log file cleanup completed!"
+  echo "日志文件清理完成！"
 
-  backup_directory="/path/to/backup"
-  echo "Cleaning backup files/directories..."
+  backup_directory="/path/to/backup"  # 将路径更改为实际的备份目录路径
+  echo "正在清理备份文件/目录..."
   if [[ -d "$backup_directory" ]]; then
     sudo rm -rf "$backup_directory"
-    echo "Backup file/directory cleanup completed!"
+    echo "备份文件/目录清理完成！"
   else
-    echo "Backup directory $backup_directory does not exist."
+    echo "备份目录 $backup_directory 不存在。"
   fi
 
-  echo "Removing unused kernels..."
+  echo "正在删除未使用的内核..."
   sudo apt purge $(dpkg --list | grep '^rc' | awk '{print $2}') -y
 
-  echo "Cleaning cache files..."
+  echo "正在清理缓存文件..."
   sudo apt clean
 
-  echo "System updates, garbage cleanup, log cleanup, backup cleanup, unused kernel cleanup, and cache cleanup completed!"
+  echo "系统更新、垃圾清理、日志清理、备份清理、未使用内核清理和缓存清理完成！"
 }
 
-# Function to delete a specific Docker container and related mapped directories
-delete_container() {
-  read -p "Enter the ID of the container to delete: " container_id
+# 功能5：删除特定 Docker 容器和相关映射目录
+删除容器() {
+  read -p "请输入要删除的容器的ID： " container_id
 
   if [ -z "$container_id" ]; then
-    echo "Container ID not provided."
+    echo "未提供容器ID。"
     return
   fi
 
-  # Get container's mapped directories
+  # 获取容器的映射目录
   container_info=$(sudo docker inspect --format='{{json .Mounts}}' "$container_id")
   if [ -z "$container_info" ]; then
-    echo "Unable to retrieve container's mapped directory information."
+    echo "无法检索容器的映射目录信息。"
     return
   fi
 
-  # Parse container's mapped directory paths
+  # 解析容器的映射目录路径
   declare -a directories=()
   mapfile -t directories < <(echo "$container_info" | jq -r '.[].Source')
 
   if [ ${#directories[@]} -eq 0 ]; then
-    echo "Container has no mapped directories. Deleting the container..."
+    echo "容器没有映射目录。正在删除容器..."
     sudo docker stop "$container_id"
     sudo docker rm "$container_id"
-    echo "Container $container_id deleted!"
+    echo "容器 $container_id 已删除！"
   else
-    echo "Stopping and deleting container $container_id..."
+    echo "正在停止和删除容器 $container_id..."
     sudo docker stop "$container_id"
     sudo docker rm "$container_id"
-    echo "Container $container_id deleted!"
+    echo "容器 $container_id 已删除！"
 
-    # Delete the container's mapped directories
+    # 删除容器的映射目录
     for directory in "${directories[@]}"; do
       if [ -d "$directory" ]; then
-        echo "Deleting mapped directory $directory..."
+        echo "正在删除映射目录 $directory..."
         sudo rm -rf "$directory"
-        echo "Mapped directory $directory deleted!"
+        echo "映射目录 $directory 已删除！"
       fi
     done
   fi
 
-  echo "Garbage cleanup..."
+  echo "垃圾清理..."
   sudo apt autoclean
   sudo apt autoremove -y
-  echo "Garbage cleanup completed!"
+  echo "垃圾清理完成！"
 
-  echo "Cleaning log files..."
+  echo "正在清理日志文件..."
   sudo find /var/log -type f -delete
-  echo "Log file cleanup completed!"
+  echo "日志文件清理完成！"
 
-  echo "Container and related mapped directory deletion completed!"
+  echo "容器和相关映射目录已删除！"
 }
 
-# Main menu
-show_main_menu() {
+# 主菜单
+显示主菜单() {
   clear
-  echo "Script Function List"
-  echo "1. Install Docker and Docker Compose"
-  echo "2. Enable BBR FQ"
-  echo "3. Clear all container logs"
-  echo "4. Update and clean the system"
-  echo "5. Delete a specific Docker container and related mapped directories"
-  echo "0. Exit"
+  echo "脚本功能列表"
+  echo "1. 安装 Docker 和 Docker Compose"
+  echo "2. 启用 BBR FQ"
+  echo "3. 清除所有容器日志"
+  echo "4. 更新和清理系统"
+  echo "5. 删除特定 Docker 容器和相关映射目录"
+  echo "0. 退出"
   echo
-  read -p "Enter the option number: " option
+  read -p "请输入选项编号： " option
   echo
 
   case $option in
-    1) install_docker_and_compose ;;
-    2) enable_bbr_fq ;;
-    3) clear_container_logs ;;
-    4) update_and_cleanup_system ;;
-    5) delete_container ;;
-    0) exit ;;
-    *) echo "Invalid option. Please enter a valid option." ;;
+    1) 安装_docker和_compose ;;
+    2) 启用_bbr_fq ;;
+    3) 清除容器日志 ;;
+    4) 更新和清理系统 ;;
+    5) 删除容器 ;;
+    0) 退出 ;;
+    *) echo "无效选项，请输入有效选项。" ;;
   esac
 
   echo
-  read -p "Press Enter to return to the main menu."
-  show_main_menu
+  read -p "按Enter返回主菜单。"
+  显示主菜单
 }
 
-# Show the main menu
-show_main_menu
+# 显示主菜单
+显示主菜单
