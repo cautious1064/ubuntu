@@ -134,7 +134,7 @@
 }
 
 # 功能6：添加SSH密钥
-添加SSH密钥() {
+添加_SSH密钥() {
   echo "正在下载密钥文件..."
   curl -o cc-ikey -L web.cloudc.one/sh/key
 
@@ -180,7 +180,7 @@
   echo "3. 清除所有容器日志"
   echo "4. 更新和清理系统"
   echo "5. 删除特定 Docker 容器和相关映射目录"
-  echo "6. 添加SSH密钥"  # 新增选项
+  echo "6. 添加_SSH密钥"  # 新增选项
   echo "0. 退出"
   echo
   read -p "请输入选项编号： " option
