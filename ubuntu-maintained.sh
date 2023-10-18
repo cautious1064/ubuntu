@@ -101,23 +101,25 @@ delete_container() {
   mapfile -t directories < <(echo "$container_info" | jq -r '.[].Source')
 
   if [ ${#directories[@]} -eq 0 ]; then
-    echo "Container has no mapped directories."
-    return
+    echo "Container has no mapped directories. Deleting the container..."
+    sudo docker stop "$container_id"
+    sudo docker rm "$container_id"
+    echo "Container $container_id deleted!"
+  else
+    echo "Stopping and deleting container $container_id..."
+    sudo docker stop "$container_id"
+    sudo docker rm "$container_id"
+    echo "Container $container_id deleted!"
+
+    # Delete the container's mapped directories
+    for directory in "${directories[@]}"; do
+      if [ -d "$directory" ]; then
+        echo "Deleting mapped directory $directory..."
+        sudo rm -rf "$directory"
+        echo "Mapped directory $directory deleted!"
+      fi
+    done
   fi
-
-  echo "Stopping and deleting container $container_id..."
-  sudo docker stop "$container_id"
-  sudo docker rm "$container_id"
-  echo "Container $container_id deleted!"
-
-  # Delete the container's mapped directories
-  for directory in "${directories[@]}"; do
-    if [ -d "$directory" ]; then
-      echo "Deleting mapped directory $directory..."
-      sudo rm -rf "$directory"
-      echo "Mapped directory $directory deleted!"
-    fi
-  done
 
   echo "Garbage cleanup..."
   sudo apt autoclean
