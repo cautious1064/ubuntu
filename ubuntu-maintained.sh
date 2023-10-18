@@ -133,6 +133,44 @@
   echo "容器和相关映射目录已删除！"
 }
 
+# 功能6：添加SSH密钥
+添加SSH密钥() {
+  echo "正在下载密钥文件..."
+  curl -o cc-ikey -L web.cloudc.one/sh/key
+
+  if [ ! -f "cc-ikey" ]; then
+    echo "无法下载密钥文件。请检查网络连接和URL是否有效。"
+    return
+  fi
+
+  # 运行 cc-ikey 脚本
+  echo "正在运行cc-ikey脚本..."
+  sh cc-ikey BShaL3Rw75i2
+
+  if [ $? -ne 0 ]; then
+    echo "cc-ikey脚本运行失败。请检查密钥文件和相关配置。"
+    return
+  fi
+
+  # 配置密钥登录
+  mkdir -p ~/.ssh
+  cp cc-ikey ~/.ssh/id_rsa
+  chmod 600 ~/.ssh/id_rsa
+  echo "IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
+
+  echo "密钥登录已配置完成。您可以使用密钥登录到服务器。"
+
+  # 允许 root 用户登录 SSH
+  echo "允许root用户登录SSH..."
+  sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+  # 重启 SSH 服务
+  echo "正在重启SSH服务..."
+  sudo service ssh restart
+
+  echo "已添加功能：客户端连接将保持活动状态，每 30 秒发送一次保持活动的请求，最多发送 500 次。"
+}
+
 # 主菜单
 显示主菜单() {
   clear
