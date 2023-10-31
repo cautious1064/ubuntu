@@ -39,13 +39,13 @@ restore_networks() {
 
 # 备份Docker数据卷
 backup_volumes() {
-  docker run --rm -v my_volume:/backup -v /root/backup:/backup ubuntu tar czf /backup/volume_backup.tar.gz /data
+  docker run --rm -v my_volume:/backup_data -v /root/backup:/backup ubuntu tar czf /backup/volume_backup.tar.gz /backup_data
   echo "数据卷备份完成。"
 }
 
 # 恢复Docker数据卷
 restore_volumes() {
-  docker run --rm -v my_volume:/restore -v /root/restore:/restore ubuntu tar xzf /restore/volume_backup.tar.gz -C /restore
+  docker run --rm -v my_volume:/restore_data -v /root/restore:/restore ubuntu tar xzf /restore/volume_backup.tar.gz -C /restore_data
   echo "数据卷恢复完成。"
 }
 
