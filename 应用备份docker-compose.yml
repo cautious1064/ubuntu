@@ -1,5 +1,13 @@
 version: "3"
 services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    volumes:
+      - /vw-data/:/data
+    ports:
+      - "86:80"
+
   alist:
     image: xhofe/alist
     container_name: alist
