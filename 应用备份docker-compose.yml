@@ -4,7 +4,7 @@ services:
     image: vaultwarden/server:latest
     container_name: vaultwarden
     volumes:
-      - /vw-data/:/data
+      - /root/vw-data/:/data
     ports:
       - "86:80"
 
