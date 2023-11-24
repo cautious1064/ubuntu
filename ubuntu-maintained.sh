@@ -171,6 +171,46 @@
   echo "已添加功能：客户端连接将保持活动状态，每 30 秒发送一次保持活动的请求，最多发送 500 次。"
 }
 
+# 功能7：调整交换空间大小
+调整交换空间大小() {
+  read -p "请输入新的交换空间大小（以MB为单位，输入0表示禁用交换空间）: " new_swap_size
+
+  # 检查输入是否是数字
+  if ! [[ $new_swap_size =~ ^[0-9]+$ ]]; then
+    echo "无效输入。请输入一个正整数作为新的交换空间大小。"
+    return
+  fi
+
+  # 禁用交换空间
+  if [ "$new_swap_size" -eq 0 ]; then
+    sudo swapoff -a
+    sudo sed -i '/swap/d' /etc/fstab
+    echo "已禁用交换空间。"
+    return
+  fi
+
+  # 调整交换空间大小
+  current_swap_size=$(free -m | awk '/Swap/ {print $2}')
+  if [ "$new_swap_size" -eq "$current_swap_size" ]; then
+    echo "交换空间大小已经是所需大小。"
+    return
+  fi
+
+  # 调整交换空间大小
+  sudo swapoff -a
+  sudo dd if=/dev/zero of=/swapfile bs=1M count="$new_swap_size"
+  sudo chmod 600 /swapfile
+  sudo mkswap /swapfile
+  sudo swapon /swapfile
+
+  # 更新 /etc/fstab
+  if ! grep -q "/swapfile" /etc/fstab; then
+    echo '/swapfile none swap sw 0 0' | sudo tee -a /etc/fstab
+  fi
+
+  echo "交换空间大小已调整为 ${new_swap_size}MB。"
+}
+
 # 主菜单
 显示主菜单() {
   clear
@@ -180,7 +220,8 @@
   echo "3. 清除所有容器日志"
   echo "4. 更新和清理系统"
   echo "5. 删除特定 Docker 容器和相关映射目录"
-  echo "6. 添加SSH密钥" 
+  echo "6. 添加SSH密钥"
+  echo "7. 调整交换空间大小"
   echo "0. 退出"
   echo
   read -p "请输入选项编号： " option
@@ -193,6 +234,7 @@
     4) 更新和清理系统 ;;
     5) 删除容器 ;;
     6) 添加_SSH密钥 ;;
+    7) 调整交换空间大小 ;;
     0) exit ;;
 
     *) echo "无效选项，请输入有效选项。" ;;
