@@ -74,3 +74,13 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
     command: --cleanup
+
+  aapanel:
+    image: aapanel/aapanel:lib
+    container_name: aapanel
+    network_mode: host
+    restart: unless-stopped
+    volumes:
+      - /root/website_data:/www/wwwroot
+      - /root/mysql_data:/www/server/data
+      - /root/vhost:/www/server/panel/vhost
