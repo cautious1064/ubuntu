@@ -4,6 +4,11 @@
 ```
 wget -O /root/ubuntu-maintained.sh https://raw.githubusercontent.com/cautious1064/ubuntu/main/ubuntu-maintained.sh && chmod a+x ubuntu-maintained.sh && bash ubuntu-maintained.sh
 ```
+#Busybox
+
+```
+wget -O /root/busybox-maintained.sh https://raw.githubusercontent.com/cautious1064/ubuntu/main/busybox-maintained.sh && chmod a+x busybox-maintained.sh && bash busybox-maintained.sh
+```
 
 # 快速部署 
 
