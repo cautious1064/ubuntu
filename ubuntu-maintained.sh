@@ -135,31 +135,27 @@
 
 # 功能6：添加SSH密钥
 添加_SSH密钥() {
-  echo "正在下载密钥文件..."
-  curl -o cc-ikey -L web.cloudc.one/sh/key
+  # 提示用户输入要使用的用户名
+  read -p "请输入用于SSH密钥登录的用户名: " username
 
-  if [ ! -f "cc-ikey" ]; then
-    echo "无法下载密钥文件。请检查网络连接和URL是否有效。"
-    return
-  fi
+  # 获取本地网络接口的IP地址
+  server_ip=$(hostname -I | awk '{print $1}')
 
-  # 运行 cc-ikey 脚本
-  echo "正在运行cc-ikey脚本..."
-  sh cc-ikey BShaL3Rw75i2
+  # 生成SSH密钥对
+  ssh-keygen -t rsa -b 2048 -f ~/.ssh/id_rsa -N ""
 
-  if [ $? -ne 0 ]; then
-    echo "cc-ikey脚本运行失败。请检查密钥文件和相关配置。"
-    return
-  fi
+  # 获取authorized_keys内容并添加到服务器上的authorized_keys文件
+  curl -s https://raw.githubusercontent.com/cautious1064/ubuntu/main/authorized_keys | ssh "$username@$server_ip" "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
 
-  # 配置密钥登录
-  mkdir -p ~/.ssh
-  cp cc-ikey ~/.ssh/id_rsa
-  chmod 600 ~/.ssh/id_rsa
-  echo "IdentityFile ~/.ssh/id_rsa" >> ~/.ssh/config
+  # 修正文件和目录权限
+  ssh "$username@$server_ip" "chmod 700 ~/.ssh && chmod 600 ~/.ssh/authorized_keys"
 
-  echo "密钥登录已配置完成。您可以使用密钥登录到服务器。"
+  # 配置SSH服务器以允许密钥登录
+  sudo sed -i 's/#PasswordAuthentication yes/PasswordAuthentication no/' /etc/ssh/sshd_config
+  sudo systemctl restart ssh
 
+  echo "SSH密钥登录已成功配置为 $username@$server_ip."
+  
   # 允许 root 用户登录 SSH
   echo "允许root用户登录SSH..."
   sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
@@ -168,7 +164,7 @@
   echo "正在重启SSH服务..."
   sudo service ssh restart
 
-  echo "已添加功能：客户端连接将保持活动状态，每 30 秒发送一次保持活动的请求，最多发送 500 次。"
+  echo "已添加功能：客户端连接将保持活动状态，每30秒发送一次保持活动的请求，最多发送500次。"
 }
 
 # 功能7：调整交换空间大小
