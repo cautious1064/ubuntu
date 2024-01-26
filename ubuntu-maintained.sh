@@ -156,9 +156,9 @@
 
   echo "SSH密钥登录已成功配置为 $username@$server_ip."
   
-  # 允许 root 用户登录 SSH
-  echo "允许root用户登录SSH..."
-  sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+  # 禁止 root 用户登录 SSH 使用密码
+  echo "禁止root用户使用密码登录SSH..."
+  sudo sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin without-password/' /etc/ssh/sshd_config
 
   # 重启 SSH 服务
   echo "正在重启SSH服务..."
@@ -166,6 +166,7 @@
 
   echo "已添加功能：客户端连接将保持活动状态，每30秒发送一次保持活动的请求，最多发送500次。"
 }
+
 
 # 功能7：调整交换空间大小
 调整交换空间大小() {
