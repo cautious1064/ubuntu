@@ -75,8 +75,8 @@ services:
     restart: unless-stopped
     command: --cleanup
 
-  aapanel:
-    image: aapanel/aapanel:lib
+  btpanel:
+    image: btpanel/baota:lnmp
     container_name: aapanel
     network_mode: host
     restart: unless-stopped
