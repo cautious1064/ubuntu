@@ -76,8 +76,8 @@ services:
     command: --cleanup
 
   btpanel:
-    image: btpanel/baota:lnmp
-    container_name: aapanel
+    image: btpanel/baota:l
+    container_name: btpanel
     network_mode: host
     restart: unless-stopped
     volumes:
