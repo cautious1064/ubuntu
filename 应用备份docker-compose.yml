@@ -7,7 +7,6 @@ services:
       - /root/vw-data/:/data
     ports:
       - "86:80"
-
   alist:
     image: xhofe/alist
     container_name: alist
@@ -20,7 +19,6 @@ services:
       - UMASK=022
     volumes:
       - /etc/alist:/opt/alist/data
-
   chatgpt-web:
     image: chenzhaoyu94/chatgpt-web
     ports:
@@ -36,7 +34,6 @@ services:
       - TIMEOUT_MS=60000
       - SOCKS_PROXY_HOST=xxxx
       - SOCKS_PROXY_PORT=xxxx
-
   mcserver:
     image: marctv/minecraft-papermc-server:latest
     container_name: mcserver
@@ -49,7 +46,6 @@ services:
     ports:
       - "25565:25565"
     tty: true
-
   nginx:
     image: jc21/nginx-proxy-manager
     restart: unless-stopped
@@ -57,7 +53,6 @@ services:
     volumes:
       - /root/data:/data
       - /root/letsencrypt:/etc/letsencrypt
-
   qinglong:
     image: whyour/qinglong
     container_name: qinglong
@@ -67,14 +62,12 @@ services:
       - 5700:5700
     volumes:
       - /root/ql/data:/ql/data
-
   watchtower:
     image: containrrr/watchtower
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     restart: unless-stopped
     command: --cleanup
-
   btpanel:
     image: btpanel/baota:l
     container_name: btpanel
@@ -84,3 +77,11 @@ services:
       - /root/website_data:/www/wwwroot
       - /root/mysql_data:/www/server/data
       - /root/vhost:/www/server/panel/vhost
+  x-ui:
+    image: enwaiax/x-ui
+    container_name: x-ui
+    restart: unless-stopped
+    network_mode: host
+    volumes:
+      - /root/x-ui/db/:/etc/x-ui/
+      - /root/x-ui/cert/:/root/cert/
